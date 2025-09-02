@@ -17,20 +17,19 @@ class Nnhamming:
         df_modif = df.drop('enfermedad', axis=1)
         df_numeric = df_modif.apply(pd.to_numeric)
         valores = df_numeric.values.tolist()
-        criterio = float("inf")
-        selected_index = -1
+        dic_enf = {}
+        largo_df = len(df_modif.columns)
 
         for index, values in enumerate(valores):
-            new_value = Nnhamming.calculate_distance(values, vector)
-            if new_value < criterio:
-                criterio = new_value
-                selected_index = index       
+            new_value = Nnhamming.calculate_distance(values, vector) 
+            dic_enf[df.iloc[index]['enfermedad']] = new_value
+        
+        lista = list(sorted(dic_enf.items(), key=lambda item: item[1]))[:3]
 
-        if selected_index != -1:
-            return df.iloc[selected_index]['enfermedad']
-        return None
+        return lista
 
 
-nuevo_paciente = [1, 0, 1, 0, 0]
-resultado = Nnhamming.clasificar(df, nuevo_paciente)
-print("El paciente tiene:", resultado)
+nuevo_paciente7 = [1, 1, 1, 0,1] 
+print(Nnhamming.clasificar(df, nuevo_paciente7))
+
+
