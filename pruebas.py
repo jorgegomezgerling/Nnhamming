@@ -10,8 +10,6 @@ vector3 = [0,1,0,1,0]
 vector4 = [0,0,0,0,1]
 vector5 = [0,1,1,1,0]
 
-print(type(vector1))
-
 def calculate_distance(vector1, vector2):
         """
         Valida que los vectores sean de igual tamanio,
@@ -30,15 +28,17 @@ def clasificar(df, vector):
     df_numeric = df_modif.apply(pd.to_numeric)
     valores = df_numeric.values.tolist()
     criterio = 999999999
+    selected_index = -1
 
-    for values in valores:
+    for index, values in enumerate(valores):
         new_value = calculate_distance(values, vector)
         if new_value < criterio:
             criterio = new_value
+            selected_index = index       
+
+    if selected_index != -1:
+        enfermedad = df.iloc[selected_index]['enfermedad']
     
-    return criterio
+    return enfermedad
 
-print(clasificar(df, vector5))
-
-
-
+print(clasificar(df, vector2))
