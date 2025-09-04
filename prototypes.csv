@@ -5,3 +5,7 @@ fiebre,tos,dolor_gargante,fatiga,dolor_cabeza,enfermedad
 0,1,0,0,0,otitis
 0,0,0,0,1,migrania
 0,0,0,1,1,depresion
+1,0,0,1,1,covid
+1,1,1,0,1,neumonia
+0,0,1,1,0,amigdalitis
+0,1,1,1,1,bronquitis
