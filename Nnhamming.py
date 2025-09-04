@@ -1,10 +1,23 @@
 import pandas as pd
-provisional_dataset = 'dataset.csv'
-df = pd.read_csv(provisional_dataset)
+df = pd.read_csv('prototypes.csv')
 
 class Nnhamming:
-    @staticmethod
-    def calculate_distance(vector1, vector2):
+    def __init__(self):
+        self.prototipos = [] 
+        self.etiquetas = []      
+
+    def add_prototype(self, vector, etiqueta):
+        self.prototipos.append(vector)
+        self.etiquetas.append(etiqueta)
+
+    def fit_from_df(self, df):
+        prototypes = df.drop('enfermedad', axis=1).apply(pd.to_numeric).values.tolist()
+        etiquetas = df['enfermedad'].values.tolist()
+
+        for prototype, etiqueta in zip(prototypes, etiquetas):
+            self.add_prototype(prototype, etiqueta)
+    
+    def calculate_distance(self, vector1, vector2):
         distance = 0
         if len(vector1) == len(vector2):
             for i in range(len(vector1)):
@@ -12,24 +25,34 @@ class Nnhamming:
                     distance += 1
         return distance
     
-    @staticmethod
-    def clasificar(df, vector):
-        df_modif = df.drop('enfermedad', axis=1)
-        df_numeric = df_modif.apply(pd.to_numeric)
-        valores = df_numeric.values.tolist()
-        dic_enf = {}
-        largo_df = len(df_modif.columns)
+    def predict(self, vector, k=1):
+        enfermedades_cantidatas = []
 
-        for index, values in enumerate(valores):
-            new_value = Nnhamming.calculate_distance(values, vector) 
-            dic_enf[df.iloc[index]['enfermedad']] = new_value
+        if k > len(self.prototipos):
+            k = len(self.prototipos)
+
+        if len(vector) != len(self.prototipos[0]):
+            return None
+
+        for prototype, etiqueta in zip(self.prototipos, self.etiquetas):
+            distance = self.calculate_distance(vector, prototype)
+            enfermedades_cantidatas.append((etiqueta, distance))
+
+        return sorted(enfermedades_cantidatas, key=lambda item: item[1])[:k]
         
-        lista = list(sorted(dic_enf.items(), key=lambda item: item[1]))[:3]
-
-        return lista
 
 
-nuevo_paciente7 = [1, 1, 1, 0,1] 
-print(Nnhamming.clasificar(df, nuevo_paciente7))
+vector_prueba = [0, 1, 1, 1, 0]
+red = Nnhamming()
+red.fit_from_df(df)
+print(red.predict(vector_prueba))
+
+
+
+
+
+
+
+    
 
 
