@@ -1,6 +1,6 @@
 import pandas as pd
 from numpy import argsort
-df = pd.read_csv('prototypes.csv')
+df = pd.read_csv('kaggle_dataset.csv')
 
 class Nnhamming:
     def __init__(self):
@@ -12,8 +12,8 @@ class Nnhamming:
         self.etiquetas.append(etiqueta)
 
     def fit_from_df(self, df):
-        prototypes = df.drop('enfermedad', axis=1).apply(pd.to_numeric).values.tolist()
-        etiquetas = df['enfermedad'].values.tolist()
+        prototypes = df.drop('prognosis', axis=1).apply(pd.to_numeric).values.tolist()
+        etiquetas = df['prognosis'].values.tolist()
 
         for prototype, etiqueta in zip(prototypes, etiquetas):
             prototype_bipolar = [1 if x == 1 else -1 for x in prototype]
