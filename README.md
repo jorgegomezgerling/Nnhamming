@@ -7,20 +7,21 @@ enfermedades basándose en la presencia o ausencia de un conjunto de síntomas.
 
 ## Características
 
-Clasificación Basada en Distancia de Hamming: Utiliza la distancia de Hamming para medir la similitud entre un vector de síntomas de entrada y los prototipos de enfermedades predefinidos.
+- Clasificación Basada en Distancia de Hamming: Utiliza la distancia de Hamming para medir la similitud entre un vector de síntomas de entrada y los prototipos de enfermedades predefinidos.
 
-Representación Bipolar: Transforma los datos de entrada a una representación bipolar (-1, 1) para un cálculo de distancia eficiente.
+- Representación Bipolar: Transforma los datos de entrada a una representación bipolar (-1, 1) para un cálculo de distancia eficiente.
 
-Múltiples Candidatos: Permite predecir los k candidatos más probables y su nivel de confianza.
+- Múltiples Candidatos: Permite predecir los k candidatos más probables y su nivel de confianza.
 
 ## Requisitos
 
-pandas, numpy
+- pandas
+- numpy
 
 Se pueden instalar fácilmente mediante el siguiente comando: pip install pandas numpy
 
 ## Integrantes
 
-Galarza, Francisco
-Gómez, Francisco
-Gómez, Jorge
+- Galarza, Francisco
+- Gómez, Francisco
+- Gómez, Jorge
