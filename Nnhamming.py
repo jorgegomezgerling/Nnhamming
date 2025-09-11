@@ -66,6 +66,9 @@ class Nnhamming:
         Args:
             vector (vector): vector a comparar.
             k (escalar): número de posibles candidatos. Por default establecido en el candidato más fuerte = 1.
+        
+        Returns:
+            lista_candidatos (list): enfemerdades con su nivel de confianza.
         """
 
         vector_bipolar = [1 if x == 1 else -1 for x in vector]
