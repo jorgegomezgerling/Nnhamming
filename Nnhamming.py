@@ -72,28 +72,31 @@ class Nnhamming:
         """
 
         vector_bipolar = [1 if x == 1 else -1 for x in vector]
-
         if len(vector) != len(self.prototipos[0]):
             return None
-        
-        # Calcular cada activación para cada vector.
-        activaciones = [len(p) - self.calculate_distance(vector_bipolar, p) 
-                        for p in self.prototipos]
-        
-        # Orden de mayor a menor según activación.
-        indices_ordenados = sorted(range(len(activaciones)), 
-                                key=lambda i: activaciones[i], 
-                                reverse=True)
-        
-        # Se utiliza min para asegurarse de que k no exceda el límite de los índices.
-        k = min(k, len(indices_ordenados))
-        lista_candidatos = []
-        for i in indices_ordenados[:k]: # Los k primeros.
-            etiqueta = self.etiquetas[i] 
-            confianza = activaciones[i] / len(vector)
-            lista_candidatos.append((etiqueta, confianza))
 
-        return lista_candidatos
+        activaciones = [len(p) - self.calculate_distance(vector_bipolar, p)
+                        for p in self.prototipos]
+
+        M = len(activaciones)
+        epsilon = 1.0 / (M + 1)
+
+        for _ in range(100):  # tope
+            nuevas = activaciones[:]
+            for i in range(M):
+                inhibicion = epsilon * (sum(activaciones) - activaciones[i])
+                nuevas[i] = max(0, activaciones[i] - inhibicion)
+
+            activaciones = nuevas
+
+            # ✅ condición de parada de Lippmann
+            if sum(a > 0 for a in activaciones) == 1:
+                break
+
+        indices_ordenados = sorted(range(M), key=lambda i: activaciones[i], reverse=True)
+        k = min(k, len(indices_ordenados))
+        return [(self.etiquetas[i], activaciones[i] / len(vector)) for i in indices_ordenados[:k]]
+
 
 
 

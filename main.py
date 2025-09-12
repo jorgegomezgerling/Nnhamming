@@ -14,7 +14,4 @@ for i in range(0, 401):
 
 lista_enfermedades =  red.predict(vector_sintomas, k=3)
 
-for i, (enfermedad, confianza) in enumerate(lista_enfermedades):
-    print(f'La enfermedad posible en la {i + 1} posición es: {enfermedad}')
-    print(f'Nivel de confianza: {confianza:.2f}')
-    print("*"*5)
+print(lista_enfermedades)
