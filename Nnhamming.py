@@ -89,7 +89,6 @@ class Nnhamming:
 
             activaciones = nuevas
 
-            # ✅ condición de parada de Lippmann
             if sum(a > 0 for a in activaciones) == 1:
                 break
 
