@@ -78,7 +78,7 @@ class Nnhamming:
         activaciones = [len(p) - self.calculate_distance(vector_bipolar, p)
                         for p in self.prototipos]
 
-        M = len(activaciones)
+        M = len(activaciones) # Cuantas compiten
         epsilon = 1.0 / (M + 1)
 
         for _ in range(100):  # tope
