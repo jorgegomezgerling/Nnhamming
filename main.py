@@ -22,7 +22,8 @@ print("Enfermedades con carga de vector aleatorio:")
 vector_sintomas_aleatorios = []
 prueba_1(red.predict(cargar_vector_alteatorio(vector_sintomas_aleatorios), k=3))
 
-# Vector anemia con un valor cambiado:
+# Vector trastorno bipolar con un valor cambiado:
+
 print()
 print('*'*20)
 print()
