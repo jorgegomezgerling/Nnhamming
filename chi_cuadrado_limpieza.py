@@ -52,8 +52,20 @@ indice_local_mayor_caida = np.argmax(caidas_busqueda)
 punto_codo_real = inicio_corte + indice_local_mayor_caida + 1
 
 
-print(f"El punto codo está en el índice: {punto_codo_real}")
-print(f"Por lo tanto se deben conservar los primeros: {punto_codo_real} sintomas")
+# print(f"El punto codo está en el índice: {punto_codo_real}")
+# print(f"Por lo tanto se deben conservar los primeros: {punto_codo_real} sintomas")
+
+
+top_sintomas = chi2_resultados['Sintoma'].head(punto_codo_real).tolist()
+columnas_finales_silver = top_sintomas + ['prognosis']
+silver_df = raw_df[columnas_finales_silver]
+
+silver_df.to_csv('./dataset/silver/kaggle_dataset.csv', index=False)
+
+print(f'Dataset SILVER generado con {len(top_sintomas)} sintomas.')
+print('Archivo guardado en /dataset/silver/kaggle_dataset.csv')
+
+
 
 
 # caidas_busqueda = caidas_absolutas[13:50]
@@ -67,6 +79,8 @@ print(f"Por lo tanto se deben conservar los primeros: {punto_codo_real} sintomas
 # print(lista)
 
 # Resultado:
+
+# lectura empírica del comportamiento de la curva,
 
 # [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 1, 2, 1, 46, 45, 44, 43, 
 # 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32, 31, 30, 29, 28, 

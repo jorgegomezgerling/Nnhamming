@@ -1,7 +1,7 @@
 from Nnhamming import *
 import random
 
-df = pd.read_csv('/dataset/bronze/kaggle_dataset.csv') 
+df = pd.read_csv('./dataset/bronze/kaggle_dataset.csv') 
 red = Nnhamming()
 red.fit_from_df(df)
 
