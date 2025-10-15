@@ -1,14 +1,14 @@
-from src.Nnhamming import *
+from Nnhamming import *
 import random
 
-df = pd.read_csv('./dataset/bronze/kaggle_dataset.csv') 
+df = pd.read_csv('../dataset/gold/kaggle_dataset.csv') 
 red = Nnhamming()
 red.fit_from_df(df)
 
 def cargar_vector_alteatorio(vector):
-    for i in range(0, 401):
-        vector_sintomas_aleatorios.append(random.randint(0,1))
-    return vector_sintomas_aleatorios
+    for i in range(0, 20):
+        vector.append(random.randint(0,1))
+    return vector
 
 def prueba_1(lista):
     for indice, (etiqueta, nivel) in enumerate(lista):
@@ -17,17 +17,8 @@ def prueba_1(lista):
 
 # Primeramente probamos con un vector de síntomas aleatorios:
 
-print("Enfermedades con carga de vector aleatorio:")
+print("Prueba 1:")
 
-vector_sintomas_aleatorios = []
-prueba_1(red.predict(cargar_vector_alteatorio(vector_sintomas_aleatorios), k=3))
+vector = []
 
-# Vector trastorno bipolar con un valor cambiado:
-
-print()
-print('*'*20)
-print()
-print('Enfermedades con carga de vector con 1 solo valor modificado: ')
-vector_bipolar_disorder = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-
-prueba_1(red.predict(vector_bipolar_disorder, k=3))
+prueba_1(red.predict(cargar_vector_alteatorio(vector), k=3))

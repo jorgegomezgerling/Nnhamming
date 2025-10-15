@@ -15,10 +15,7 @@ enfermedades basándose en la presencia o ausencia de un conjunto de síntomas.
 
 ## Requisitos
 
-- pandas
-- numpy
-
-Se pueden instalar fácilmente mediante el siguiente comando: pip install -r requirements.txt
+- Se pueden instalar fácilmente mediante el siguiente comando: pip install -r requirements.txt
 
 ## Integrantes
 
