@@ -81,7 +81,7 @@ class Nnhamming:
         M = len(activaciones) # Cuantas compiten
         epsilon = 1.0 / (M + 1)
 
-        for _ in range(100):  # tope
+        for _ in range(20):  # tope
             nuevas = activaciones[:]
             for i in range(M):
                 inhibicion = epsilon * (sum(activaciones) - activaciones[i])

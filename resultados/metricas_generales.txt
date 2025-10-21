@@ -1,0 +1,9 @@
+MÉTRICAS DE EVALUACIÓN - MATRIZ DE CONFUSIÓN 01
+
+Accuracy: 24.76%
+Correctas: 127/513
+Incorrectas: 386/513
+
+Enfermedades: 133
+Train: 2051 muestras
+Test: 513 muestras

@@ -1,0 +1,8 @@
+OPTIMIZACIÓN DE K
+
+Accuracy 1 (k=1): 24.76%
+Accuracy 3 (k=3): 45.81%
+Accuracy 5 (k=5): 55.95%
+
+Mejora k=3 vs k=1: +21.05%
+Mejora k=5 vs k=1: +31.19%

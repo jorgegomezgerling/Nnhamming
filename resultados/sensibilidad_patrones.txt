@@ -1,0 +1,8 @@
+SENSIBILIDAD A CANTIDAD DE PATRONES
+==================================================
+
+   25% train ( 512 prototipos) → Accuracy: 20.08%
+   50% train (1025 prototipos) → Accuracy: 20.08%
+   75% train (1538 prototipos) → Accuracy: 26.90%
+  100% train (2051 prototipos) → Accuracy: 24.76%
+Mejor resultado: 75% train → 26.90% accuracy
