@@ -20,10 +20,3 @@ silver_df = pd.DataFrame(X_pca,
 silver_df['prognosis'] = Y.values
 
 silver_df.to_csv('../dataset/silver/01_pca_100comp.csv', index=False)
-
-print(f"Dataset SILVER creado correctamente.")
-print(f"Shape original: {X.shape}")
-print(f"Shape final: {silver_df.shape}")
-print(f"Reducción: {X.shape[1]} → {N_COMPONENTES} columnas ({N_COMPONENTES/X.shape[1]*100:.1f}%)")
-varianza_capturada = pca_final.explained_variance_ratio_.sum()
-print(f"Varianza capturada: {varianza_capturada*100:.2f}%")
