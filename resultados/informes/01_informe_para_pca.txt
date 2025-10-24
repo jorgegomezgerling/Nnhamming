@@ -1,0 +1,32 @@
+Informe: Análisis para PCA - SELECCION DE SINTOMAS
+
+DATASET: (2564, 400)
+
+Número de sintomas originales: 400
+Número de muestras/pacientes: 2564
+Número de enfermedades diferentes: 133
+
+VARIANZA CAPTURADA:
+
+   10 componentes →  18.56%
+   15 componentes →  24.19%
+   20 componentes →  29.06%
+   25 componentes →  33.46%
+   30 componentes →  37.40%
+   40 componentes →  44.03%
+   50 componentes →  49.93%
+   60 componentes →  55.12%
+   70 componentes →  59.66%
+   80 componentes →  63.70%
+   90 componentes →  67.26%
+  100 componentes →  70.40%
+  150 componentes →  82.23%
+  200 componentes →  89.48%
+  300 componentes →  97.05%
+  400 componentes → 100.00%
+
+
+INTERPRETACION Y DECISION SOBRE ANALISIS:
+
+- Optamos por quedarnos con 100 componentes (síntomas). Los cuales capturan un 70.40%
+- La reducción es de 400 a 100 componentes. Un 75% menos.

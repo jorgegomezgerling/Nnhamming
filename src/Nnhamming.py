@@ -30,7 +30,7 @@ class Nnhamming:
         se añade mediante add_prototype a las listas de la clase.
 
         Args:
-            df (DataFrame): DataFrame sin procesar datos crudos.
+            df (DataFrame): DataFrame (datos)
         """
         prototypes = df.drop('prognosis', axis=1).apply(pd.to_numeric).values.tolist()
         etiquetas = df['prognosis'].values.tolist()
