@@ -1,3 +1,4 @@
+import pandas as pd 
 
 # Cargar datos discretizados
 df = pd.read_csv('../dataset/silver/03_discretizado_10comp.csv')

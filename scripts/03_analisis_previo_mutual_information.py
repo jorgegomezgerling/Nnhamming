@@ -107,11 +107,6 @@ INTERPRETACIÓN Y DECISIÓN:
   
 - Esta selección reduce la dimensionalidad de 100 a 10 componentes,
   manteniendo las más relevantes para la clasificación.
-
-DIFERENCIA CON PCA:
-- PCA seleccionó componentes con alta VARIANZA (cuánto varían los datos)
-- MI selecciona componentes con alta INFORMACIÓN sobre el target
-  (cuánto ayudan a predecir la enfermedad)
 """
 
 with open('../resultados/informes/02_informe_mutual_information.txt', 'w') as f:

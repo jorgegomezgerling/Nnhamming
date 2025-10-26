@@ -1,3 +1,10 @@
+"""
+
+Binarización de datos discretos siguiendo el patrón especificado en 
+el análisis.
+
+"""
+
 import pandas as pd
 
 df = pd.read_csv('../dataset/silver/03_discretizado_10comp.csv')
@@ -18,7 +25,6 @@ def binarizar_valor(valor):
 data = {}
 
 for col in X.columns:
-    print(f"Binarizando {col}. . .")
 
     col_b1 = []
     col_b2 = []

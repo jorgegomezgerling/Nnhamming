@@ -1,3 +1,10 @@
+"""
+
+Discretizador: toma datos de silver dataset y los discretiza con
+la estrategia seleccionada en el análisis previo.
+
+"""
+
 import pandas as pd
 from sklearn.preprocessing import KBinsDiscretizer
 
@@ -9,7 +16,7 @@ Y = df['prognosis']
 
 discretizador = KBinsDiscretizer(
     n_bins=3,
-    encode='ordinal',
+    encode='ordinal', # Solo un numero por bin
     strategy='quantile'
 )
 
@@ -23,5 +30,3 @@ df_discretizado = pd.DataFrame(
 df_discretizado['prognosis'] = Y.values
 
 df_discretizado.to_csv('../dataset/silver/03_discretizado_10comp.csv', index=False)
-print(f"Archivo guardado: silver/03_discretizado_10comp.csv")
-print(f"Shape: {df_discretizado.shape}")
