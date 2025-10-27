@@ -1,9 +1,0 @@
-Robustez ante ruido: Ruido   0.0% → Accuracy: 24.76%
-Ruido   5.0% → Accuracy: 20.66%
-Ruido  10.0% → Accuracy: 14.04%
-Ruido  15.0% → Accuracy: 11.50%
-Ruido  20.0% → Accuracy:  7.80%
-Ruido  25.0% → Accuracy:  5.07%
-Ruido  30.0% → Accuracy:  4.29%
-
-Degradación total (0% → 30%): -20.47%

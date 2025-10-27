@@ -95,33 +95,31 @@ matriz_df.to_csv('../resultados/metricas/01_matriz_confusion_completa.csv')
 df_metricas.to_csv('../resultados/metricas/03_metricas_por_enfermedad.csv', index=False)
 
 with open('../resultados/metricas/02_metricas_confusion.txt', 'w', encoding='utf-8') as f:
-    f.write("="*70 + "\n")
     f.write("MÉTRICAS: MATRIZ DE CONFUSIÓN\n")
-    f.write("="*70 + "\n\n")
     
     f.write("CONFIGURACIÓN:\n")
+
     f.write(f"  Train/Test split: 80/20\n")
     f.write(f"  Stratified:       Sí\n")
     f.write(f"  Random seed:      42\n")
     f.write(f"  K (predicción):   1\n\n")
     
     f.write("DATASET:\n")
+
     f.write(f"  Total muestras:   {len(df)}\n")
     f.write(f"  Enfermedades:     {n_enfermedades}\n")
     f.write(f"  Features:         {n_features}\n")
     f.write(f"  Train:            {len(X_train)} muestras\n")
     f.write(f"  Test:             {len(X_test)} muestras\n\n")
     
-    f.write("="*70 + "\n")
     f.write("RESULTADOS GENERALES\n")
-    f.write("="*70 + "\n\n")
+
     f.write(f"  Accuracy:         {accuracy*100:.2f}%\n")
     f.write(f"  Correctas:        {correctas}/{len(y_real)}\n")
     f.write(f"  Incorrectas:      {incorrectas}/{len(y_real)}\n\n")
     
-    f.write("="*70 + "\n")
+
     f.write("ANÁLISIS DEL PROBLEMA\n")
-    f.write("="*70 + "\n\n")
     
     f.write(f"  ENFERMEDADES CON 0% ACCURACY:\n")
     f.write(f"    • Cantidad:           {n_enf_cero} de {n_enfermedades} ({n_enf_cero/n_enfermedades*100:.1f}%)\n")
@@ -140,9 +138,8 @@ with open('../resultados/metricas/02_metricas_confusion.txt', 'w', encoding='utf
     f.write(f"    Esto sugiere que esas {n_enf_cero} enfermedades tienen patrones\n")
     f.write(f"    binarios muy similares o idénticos entre sí.\n\n")
     
-    f.write("="*70 + "\n")
     f.write("INTERPRETACIÓN\n")
-    f.write("="*70 + "\n\n")
+
     f.write(f"  El accuracy de {accuracy*100:.2f}% es ESPERADO dado el problema:\n\n")
     f.write(f"  LIMITACIÓN FUNDAMENTAL:\n")
     f.write(f"    • Clases a distinguir:  {n_enfermedades}\n")
@@ -155,17 +152,16 @@ with open('../resultados/metricas/02_metricas_confusion.txt', 'w', encoding='utf
     f.write(f"    • Resultado obtenido:      {accuracy*100:.2f}%\n")
     f.write(f"    • Conclusión: ✓ Dentro del rango esperado\n\n")
     
-    f.write("="*70 + "\n")
+
     f.write("TOP 10 ENFERMEDADES (MEJOR ACCURACY)\n")
-    f.write("="*70 + "\n\n")
     
     for i, row in df_metricas.head(10).iterrows():
         f.write(f"  {row['enfermedad'][:40]:40s}: {row['accuracy']:5.1f}% "
                 f"({int(row['correctas'])}/{int(row['muestras_test'])})\n")
     
-    f.write("\n" + "="*70 + "\n")
+
     f.write("BOTTOM 10 ENFERMEDADES (PEOR ACCURACY)\n")
-    f.write("="*70 + "\n\n")
+
     
     for i, row in df_metricas.tail(10).iterrows():
         f.write(f"  {row['enfermedad'][:40]:40s}: {row['accuracy']:5.1f}% "

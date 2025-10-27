@@ -1,21 +1,28 @@
 """
-Evaluación 2: Optimizar el K.
-Determinar el valor óptimo de K para maximizar la accuracy. (Es la idea, al menos).
+
+Evaluación: Optimización del parámetro K
+Determina el valor óptimo de K (número de candidatos) para la predicción
+
 """
 
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
+import matplotlib.pyplot as plt
 import sys
+import os
+
 sys.path.append("../src")
 from Nnhamming import Nnhamming
 
-# 1. Carga y preparación de datos
+os.makedirs('../resultados/graficos', exist_ok=True)
+os.makedirs('../resultados/metricas', exist_ok=True)
 
 df = pd.read_csv('../dataset/gold/kaggle_dataset.csv')
 X = df.drop('prognosis', axis=1)
 Y = df['prognosis']
 
+n_enfermedades = Y.nunique()
 
 X_train, X_test, Y_train, Y_test = train_test_split(
     X, Y,
@@ -24,113 +31,134 @@ X_train, X_test, Y_train, Y_test = train_test_split(
     random_state=42
 )
 
-# 2. ENTRENAMIENTO
-
-n_enfermedades = df['prognosis'].nunique()
-print(f"\nDataset: {len(df)} muestras, {n_enfermedades} enfermedades")
-print(f"Train: {len(X_train)} | Test: {len(X_test)}")
-
 train_df = X_train.copy()
 train_df['prognosis'] = Y_train.values
 
-print(f"\nEntrenando red...")
 red = Nnhamming()
 red.fit_from_df(train_df)
-print(f"Red entrenada con {len(red.prototipos)} prototipos")
 
-
-# 3. PREDICCIÓN CON K=5
-
-print(f"\nPrediciendo con k=5...")
-
+k_max = 10
 y_real = []
-y_pred_top1 = []  # Solo el mejor
-y_pred_top3 = []  # Los 3 mejores
-y_pred_top5 = []  # Los 5 mejores
+predicciones_por_muestra = []
 
 for i in range(len(X_test)):
-    if i % 100 == 0:
-        print(f"  Progreso: {i}/{len(X_test)}")
-    
     vector = X_test.iloc[i].values.tolist()
     real = Y_test.iloc[i]
     
-    # Predecir con k=5
-    predicciones = red.predict(vector, k=5)
+    predicciones = red.predict(vector, k=k_max)
+    top_k = [pred[0] for pred in predicciones]
     
-    # Extraer solo los nombres (sin confianza)
-    top5_nombres = [pred[0] for pred in predicciones]
-    
-    # Guardar
     y_real.append(real)
-    y_pred_top1.append(top5_nombres[0])                    # Top 1
-    y_pred_top3.append(top5_nombres[:3])                   # Top 3
-    y_pred_top5.append(top5_nombres[:5])                   # Top 5
+    predicciones_por_muestra.append(top_k)
 
-print(f"Predicciones completadas")
+k_values = [1, 2, 3, 4, 5, 7, 10]
+resultados = []
 
-# 4. CALCULAR ACCURACIES
+for k in k_values:
+    aciertos = sum(real in preds[:k] for real, preds in zip(y_real, predicciones_por_muestra))
+    accuracy = aciertos / len(y_real) * 100
+    
+    resultados.append({
+        'k': k,
+        'aciertos': aciertos,
+        'total': len(y_real),
+        'accuracy': accuracy
+    })
 
-print(f"\n{'='*70}")
-print("RESULTADOS POR K")
-print(f"{'='*70}")
+df_resultados = pd.DataFrame(resultados)
 
-accuracy_k1 = sum(real == pred for real, pred in zip(y_real, y_pred_top1)) / len(y_real)
+mejor_k = df_resultados.loc[df_resultados['accuracy'].idxmax()]
+accuracy_k1 = df_resultados[df_resultados['k'] == 1]['accuracy'].values[0]
 
-accuracy_k3 = sum(real in pred for real, pred in zip(y_real, y_pred_top3)) / len(y_real)
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
-accuracy_k5 = sum(real in pred for real, pred in zip(y_real, y_pred_top5)) / len(y_real)
+ax1.plot(df_resultados['k'], df_resultados['accuracy'], 
+         marker='o', linewidth=2.5, markersize=10, color='steelblue', label='Accuracy')
+ax1.fill_between(df_resultados['k'], df_resultados['accuracy'], 
+                  alpha=0.2, color='steelblue')
 
-print(f"Resultados:")
-print(f"Accuracy1 (k=1): {accuracy_k1*100:.2f}%")
-print(f"Accuracy3 (k=3): {accuracy_k3*100:.2f}%")
-print(f"Accuracy5 (k=5): {accuracy_k5*100:.2f}%")
+for _, row in df_resultados.iterrows():
+    ax1.text(row['k'], row['accuracy'] + 1.5, f"{row['accuracy']:.1f}%", 
+             ha='center', fontsize=9, fontweight='bold')
 
-print(f"Mejora:")
-print(f"k=3 vs k=1: +{(accuracy_k3 - accuracy_k1)*100:.2f}%")
-print(f"k=5 vs k=1: +{(accuracy_k5 - accuracy_k1)*100:.2f}%")
+ax1.axhline(y=accuracy_k1, color='red', linestyle='--', linewidth=1.5, 
+            alpha=0.6, label=f'Baseline (k=1): {accuracy_k1:.1f}%')
 
-import os
-import matplotlib.pyplot as plt
+ax1.scatter([mejor_k['k']], [mejor_k['accuracy']], 
+            color='green', s=200, zorder=5, marker='*', 
+            label=f'Mejor k={int(mejor_k["k"])}')
 
-os.makedirs('../resultados', exist_ok=True)
+ax1.set_xlabel('Valor de K', fontsize=11, fontweight='bold')
+ax1.set_ylabel('Accuracy (%)', fontsize=11, fontweight='bold')
+ax1.set_title('Accuracy vs K: Top-K Candidatos', fontweight='bold', fontsize=12)
+ax1.grid(True, alpha=0.3, linestyle='--')
+ax1.legend(fontsize=9)
+ax1.set_xticks(k_values)
 
-# Guardar métricas
-with open('../resultados/optimizacion_k.txt', 'w') as f:
-    f.write("OPTIMIZACIÓN DE K\n")
+mejoras = []
+for k in k_values[1:]:
+    acc_k = df_resultados[df_resultados['k'] == k]['accuracy'].values[0]
+    mejora = acc_k - accuracy_k1
+    mejoras.append(mejora)
 
-    f.write(f"Accuracy 1 (k=1): {accuracy_k1*100:.2f}%\n")
-    f.write(f"Accuracy 3 (k=3): {accuracy_k3*100:.2f}%\n")
-    f.write(f"Accuracy 5 (k=5): {accuracy_k5*100:.2f}%\n")
-    f.write(f"\nMejora k=3 vs k=1: +{(accuracy_k3 - accuracy_k1)*100:.2f}%\n")
-    f.write(f"Mejora k=5 vs k=1: +{(accuracy_k5 - accuracy_k1)*100:.2f}%\n")
+ax2.bar(k_values[1:], mejoras, color='green', alpha=0.7, edgecolor='black')
+ax2.axhline(y=0, color='red', linestyle='-', linewidth=1)
 
-print(f"Resultados guardados: resultados/optimizacion_k.txt")
+for k, mejora in zip(k_values[1:], mejoras):
+    ax2.text(k, mejora + 0.5, f'+{mejora:.1f}%', 
+             ha='center', fontsize=9, fontweight='bold')
 
-# Visualización
-k_values = [1, 3, 5]
-accuracies = [accuracy_k1*100, accuracy_k3*100, accuracy_k5*100]
+ax2.set_xlabel('Valor de K', fontsize=11, fontweight='bold')
+ax2.set_ylabel('Mejora vs k=1 (%)', fontsize=11, fontweight='bold')
+ax2.set_title('Mejora Relativa por K', fontweight='bold', fontsize=12)
+ax2.grid(True, alpha=0.3, axis='y')
+ax2.set_xticks(k_values[1:])
 
-plt.figure(figsize=(10, 6))
-plt.plot(k_values, accuracies, marker='o', linewidth=2, markersize=10, color='steelblue')
-plt.fill_between(k_values, accuracies, alpha=0.3, color='steelblue')
-
-for k, acc in zip(k_values, accuracies):
-    plt.text(k, acc + 2, f'{acc:.2f}%', ha='center', fontsize=11, fontweight='bold')
-
-plt.xlabel('Valor de K', fontsize=12)
-plt.ylabel('Accuracy (%)', fontsize=12)
-plt.title('Optimización de K: Accuracy vs Número de Candidatos', fontsize=14, fontweight='bold')
-plt.grid(True, alpha=0.3, linestyle='--')
-plt.ylim(0, 70)
-plt.xticks(k_values)
-
-plt.tight_layout()
-plt.savefig('../resultados/optimizacion_k.png', dpi=150, bbox_inches='tight')
-print(f"Gráfico guardado: resultados/optimizacion_k.png")
-
+plt.suptitle(f'Optimización del Parámetro K | Test: {len(X_test)} muestras', 
+             fontsize=14, fontweight='bold')
+plt.tight_layout(rect=[0, 0, 1, 0.96])
+plt.savefig('../resultados/graficos/07_optimizacion_k.png', dpi=200, bbox_inches='tight')
 plt.close()
 
-print(f"\n{'='*70}")
-print("Evaluación completada")
-print(f"{'='*70}\n")
+with open('../resultados/metricas/04_optimizacion_k.txt', 'w', encoding='utf-8') as f:
+
+    f.write("OPTIMIZACIÓN DEL PARÁMETRO K\n")
+
+    
+    f.write("CONFIGURACIÓN:\n")
+    f.write(f"  Dataset:       {len(df)} muestras, {n_enfermedades} enfermedades\n")
+    f.write(f"  Train:         {len(X_train)} muestras\n")
+    f.write(f"  Test:          {len(X_test)} muestras\n")
+    f.write(f"  K evaluados:   {k_values}\n\n")
+    
+    f.write("RESULTADOS POR K\n")
+    
+    f.write(f"  {'K':>3s}  {'Aciertos':>10s}  {'Accuracy':>10s}  {'Mejora vs k=1':>15s}\n")
+    f.write(f"  {'-'*3}  {'-'*10}  {'-'*10}  {'-'*15}\n")
+    
+    for _, row in df_resultados.iterrows():
+        k = int(row['k'])
+        aciertos = int(row['aciertos'])
+        total = int(row['total'])
+        accuracy = row['accuracy']
+        mejora = accuracy - accuracy_k1
+        
+        marca = " *" if k == int(mejor_k['k']) else "  "
+        f.write(f"  {k:3d}  {aciertos:4d}/{total:4d}  {accuracy:9.2f}%  {mejora:+14.2f}%{marca}\n")
+    
+    f.write("\n")
+    f.write(f"  * Mejor K: {int(mejor_k['k'])}\n\n")  
+
+    f.write("INTERPRETACIÓN\n")
+    
+    f.write(f"  BASELINE (K=1):\n")
+    f.write(f"    Accuracy: {accuracy_k1:.2f}%\n")
+    f.write(f"    La red selecciona solo el candidato más cercano.\n\n")
+    
+    f.write(f"  MEJOR RESULTADO (K={int(mejor_k['k'])}):\n")
+    f.write(f"    Accuracy: {mejor_k['accuracy']:.2f}%\n")
+    f.write(f"    Mejora: +{mejor_k['accuracy'] - accuracy_k1:.2f}% puntos\n")
+    f.write(f"    La respuesta correcta está entre los {int(mejor_k['k'])} candidatos\n")
+    f.write(f"    más cercanos en {mejor_k['accuracy']:.1f}% de los casos.\n\n")
+    
+df_resultados.to_csv('../resultados/metricas/05_optimizacion_k_detalle.csv', index=False)

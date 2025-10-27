@@ -1,7 +1,4 @@
-======================================================================
 MÉTRICAS: MATRIZ DE CONFUSIÓN
-======================================================================
-
 CONFIGURACIÓN:
   Train/Test split: 80/20
   Stratified:       Sí
@@ -15,18 +12,12 @@ DATASET:
   Train:            2051 muestras
   Test:             513 muestras
 
-======================================================================
 RESULTADOS GENERALES
-======================================================================
-
   Accuracy:         24.76%
   Correctas:        127/513
   Incorrectas:      386/513
 
-======================================================================
 ANÁLISIS DEL PROBLEMA
-======================================================================
-
   ENFERMEDADES CON 0% ACCURACY:
     • Cantidad:           57 de 133 (42.9%)
     • Muestras afectadas: 215 de 513 (41.9%)
@@ -46,10 +37,7 @@ ANÁLISIS DEL PROBLEMA
     Esto sugiere que esas 57 enfermedades tienen patrones
     binarios muy similares o idénticos entre sí.
 
-======================================================================
 INTERPRETACIÓN
-======================================================================
-
   El accuracy de 24.76% es ESPERADO dado el problema:
 
   LIMITACIÓN FUNDAMENTAL:
@@ -65,10 +53,7 @@ INTERPRETACIÓN
     • Resultado obtenido:      24.76%
     • Conclusión: ✓ Dentro del rango esperado
 
-======================================================================
 TOP 10 ENFERMEDADES (MEJOR ACCURACY)
-======================================================================
-
   pancytopenia                            : 100.0% (1/1)
   migraine disorders                      : 100.0% (1/1)
   pneumothorax                            : 100.0% (2/2)
@@ -79,11 +64,7 @@ TOP 10 ENFERMEDADES (MEJOR ACCURACY)
   osteoporosis                            :  75.0% (3/4)
   dehydration                             :  75.0% (3/4)
   deep vein thrombosis                    :  75.0% (3/4)
-
-======================================================================
 BOTTOM 10 ENFERMEDADES (PEOR ACCURACY)
-======================================================================
-
   hepatitis                               :   0.0% (0/4)
   embolism pulmonary                      :   0.0% (0/5)
   hemorrhoids                             :   0.0% (0/3)

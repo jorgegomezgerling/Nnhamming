@@ -1,0 +1,33 @@
+
+TEST DE RUIDO: ROBUSTEZ DE LA RED
+
+
+CONFIGURACIÓN:
+  Features:          20 bits
+  Train:             2051 muestras
+  Test:              513 muestras
+  Niveles de ruido:  0%, 5%, 10%, 15%, 20%, 25%, 30%
+  Seed:              42
+
+RESULTADOS
+    Ruido    Bits     Aciertos    Accuracy     Pérdida
+  -------  ------  -----------  ----------  ----------
+      0%       0   127/ 513      24.76%           -
+      5%       1   105/ 513      20.47%      -4.29%
+     10%       2    81/ 513      15.79%      -8.97%
+     15%       3    67/ 513      13.06%     -11.70%
+     20%       4    33/ 513       6.43%     -18.32%
+     25%       5    25/ 513       4.87%     -19.88%
+     30%       6    17/ 513       3.31%     -21.44%
+
+  Degradación total (0% → 30%): -21.44% puntos
+
+CONCLUSIÓN
+  La red parte de un accuracy base de 24.76%.
+
+  Con 30% de ruido (~6 bits cambiados), el accuracy
+  cae a 3.31%, representando una pérdida de 21.44%.
+
+  La red es sensible al ruido, lo cual es esperado dado que utiliza
+  distancia de Hamming para clasificar (cada bit cuenta).
+
