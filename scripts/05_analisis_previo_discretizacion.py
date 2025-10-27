@@ -1,5 +1,7 @@
 """
-Análisis de Discretización: Justificación simple
+
+Análisis de Discretización: 
+
 """
 
 import pandas as pd

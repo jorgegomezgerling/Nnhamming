@@ -1,6 +1,8 @@
 """
+
 Aplicación de Mutual Information para selección de componentes
 Selecciona las top 10 componentes con mayor score de MI
+
 """
 
 import pandas as pd
@@ -20,6 +22,7 @@ mutual_information = pd.DataFrame({
     'Componente': X.columns,
     'Score': scores,
 })
+
 mutual_information = mutual_information.sort_values("Score", ascending=False)
 
 N_COMPONENTES = 10

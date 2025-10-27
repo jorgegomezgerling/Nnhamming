@@ -16,6 +16,7 @@ DISTRIBUCIÓN DE CASOS
   Enfermedades con <10 casos: 8
 
 ANÁLISIS TEÓRICO VS PRÁCTICO
+
 TEÓRICAMENTE:
   Bits necesarios: log₂(133) = 7.06
   Redondeado:                      8 bits
@@ -23,6 +24,7 @@ TEÓRICAMENTE:
   Gap:                             12 bits: Suficiente
 
 EN PRÁCTICA:
+
   Ratio clases/features: 133/20 = 6.65
 
   Un ratio alto indica dificultad para separar clases:

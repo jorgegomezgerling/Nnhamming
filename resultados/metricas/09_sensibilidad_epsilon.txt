@@ -1,0 +1,178 @@
+SENSIBILIDAD DEL PARÁMETRO EPSILON
+CONFIGURACIÓN:
+  Train:             2051 muestras
+  Test:              513 muestras
+  Prototipos:        2051
+  Epsilon factors:   [0.1, 0.5, 1.0, 2.0, 5.0, 10.0]
+
+RESULTADOS
+   ε factor      ε real    Accuracy   Iter. prom.
+  ---------  ----------  ----------  ------------
+
+  * Mejor accuracy
+
+INTERPRETACIÓN
+  EPSILON = epsilon_factor / (M + 1)
+  Donde M = 2051 prototipos
+
+  Se identifican DOS regiones:
+
+  REGIÓN ESTABLE (ε ≤ 1.0):
+    Accuracy:   ~24.76% (constante)
+    Competencia equilibrada entre candidatos
+
+  REGIÓN DE COLAPSO (ε ≥ 2.0):
+    Accuracy:   <2% (colapso total)
+    Inhibición excesiva elimina TODOS los candidatos
+
+CONCLUSIÓN
+  El parámetro epsilon presenta un punto de quiebre crítico
+  entre ε = 1.0 y ε = 2.0.
+
+  El valor por defecto (ε = 1.0) es óptimo para este problema.
+  Valores superiores causan fallo catastrófico del mecanismo
+  de competencia.
+
+  Las 20 iteraciones son suficientes: aumentarlas no mejora
+  el accuracy, solo incrementa tiempo de cómputo.
+
+
+  * Mejor accuracy
+
+INTERPRETACIÓN
+  EPSILON = epsilon_factor / (M + 1)
+  Donde M = 2051 prototipos
+
+  Se identifican DOS regiones:
+
+  REGIÓN ESTABLE (ε ≤ 1.0):
+    Accuracy:   ~24.76% (constante)
+    Competencia equilibrada entre candidatos
+
+  REGIÓN DE COLAPSO (ε ≥ 2.0):
+    Accuracy:   <2% (colapso total)
+    Inhibición excesiva elimina TODOS los candidatos
+
+CONCLUSIÓN
+  El parámetro epsilon presenta un punto de quiebre crítico
+  entre ε = 1.0 y ε = 2.0.
+
+  El valor por defecto (ε = 1.0) es óptimo para este problema.
+  Valores superiores causan fallo catastrófico del mecanismo
+  de competencia.
+
+  Las 20 iteraciones son suficientes: aumentarlas no mejora
+  el accuracy, solo incrementa tiempo de cómputo.
+
+
+  * Mejor accuracy
+
+INTERPRETACIÓN
+  EPSILON = epsilon_factor / (M + 1)
+  Donde M = 2051 prototipos
+
+  Se identifican DOS regiones:
+
+  REGIÓN ESTABLE (ε ≤ 1.0):
+    Accuracy:   ~24.76% (constante)
+    Competencia equilibrada entre candidatos
+
+  REGIÓN DE COLAPSO (ε ≥ 2.0):
+    Accuracy:   <2% (colapso total)
+    Inhibición excesiva elimina TODOS los candidatos
+
+CONCLUSIÓN
+  El parámetro epsilon presenta un punto de quiebre crítico
+  entre ε = 1.0 y ε = 2.0.
+
+  El valor por defecto (ε = 1.0) es óptimo para este problema.
+  Valores superiores causan fallo catastrófico del mecanismo
+  de competencia.
+
+  Las 20 iteraciones son suficientes: aumentarlas no mejora
+  el accuracy, solo incrementa tiempo de cómputo.
+
+
+  * Mejor accuracy
+
+INTERPRETACIÓN
+  EPSILON = epsilon_factor / (M + 1)
+  Donde M = 2051 prototipos
+
+  Se identifican DOS regiones:
+
+  REGIÓN ESTABLE (ε ≤ 1.0):
+    Accuracy:   ~24.76% (constante)
+    Competencia equilibrada entre candidatos
+
+  REGIÓN DE COLAPSO (ε ≥ 2.0):
+    Accuracy:   <2% (colapso total)
+    Inhibición excesiva elimina TODOS los candidatos
+
+CONCLUSIÓN
+  El parámetro epsilon presenta un punto de quiebre crítico
+  entre ε = 1.0 y ε = 2.0.
+
+  El valor por defecto (ε = 1.0) es óptimo para este problema.
+  Valores superiores causan fallo catastrófico del mecanismo
+  de competencia.
+
+  Las 20 iteraciones son suficientes: aumentarlas no mejora
+  el accuracy, solo incrementa tiempo de cómputo.
+
+
+  * Mejor accuracy
+
+INTERPRETACIÓN
+  EPSILON = epsilon_factor / (M + 1)
+  Donde M = 2051 prototipos
+
+  Se identifican DOS regiones:
+
+  REGIÓN ESTABLE (ε ≤ 1.0):
+    Accuracy:   ~24.76% (constante)
+    Competencia equilibrada entre candidatos
+
+  REGIÓN DE COLAPSO (ε ≥ 2.0):
+    Accuracy:   <2% (colapso total)
+    Inhibición excesiva elimina TODOS los candidatos
+
+CONCLUSIÓN
+  El parámetro epsilon presenta un punto de quiebre crítico
+  entre ε = 1.0 y ε = 2.0.
+
+  El valor por defecto (ε = 1.0) es óptimo para este problema.
+  Valores superiores causan fallo catastrófico del mecanismo
+  de competencia.
+
+  Las 20 iteraciones son suficientes: aumentarlas no mejora
+  el accuracy, solo incrementa tiempo de cómputo.
+
+
+  * Mejor accuracy
+
+INTERPRETACIÓN
+  EPSILON = epsilon_factor / (M + 1)
+  Donde M = 2051 prototipos
+
+  Se identifican DOS regiones:
+
+  REGIÓN ESTABLE (ε ≤ 1.0):
+    Accuracy:   ~24.76% (constante)
+    Competencia equilibrada entre candidatos
+
+  REGIÓN DE COLAPSO (ε ≥ 2.0):
+    Accuracy:   <2% (colapso total)
+    Inhibición excesiva elimina TODOS los candidatos
+
+CONCLUSIÓN
+  El parámetro epsilon presenta un punto de quiebre crítico
+  entre ε = 1.0 y ε = 2.0.
+
+  El valor por defecto (ε = 1.0) es óptimo para este problema.
+  Valores superiores causan fallo catastrófico del mecanismo
+  de competencia.
+
+  Las 20 iteraciones son suficientes: aumentarlas no mejora
+  el accuracy, solo incrementa tiempo de cómputo.
+

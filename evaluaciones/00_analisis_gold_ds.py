@@ -1,5 +1,7 @@
 """
+
 Análisis del Dataset Gold: Caracterización inicial del problema
+
 """
 
 import pandas as pd
@@ -67,9 +69,9 @@ plt.savefig('../resultados/graficos/00_analisis_dataset_gold.png', dpi=200, bbox
 plt.close()
 
 with open('../resultados/metricas/00_caracterizacion_problema.txt', 'w', encoding='utf-8') as f:
-    f.write("="*70 + "\n")
+
     f.write("CARACTERIZACIÓN DEL PROBLEMA: DATASET GOLD\n")
-    f.write("="*70 + "\n\n")
+
     
     f.write("DIMENSIONES:\n")
     f.write(f"  Muestras totales:      {n_muestras}\n")

@@ -1,4 +1,5 @@
 MÉTRICAS: MATRIZ DE CONFUSIÓN
+
 CONFIGURACIÓN:
   Train/Test split: 80/20
   Stratified:       Sí
@@ -18,6 +19,7 @@ RESULTADOS GENERALES
   Incorrectas:      386/513
 
 ANÁLISIS DEL PROBLEMA
+
   ENFERMEDADES CON 0% ACCURACY:
     • Cantidad:           57 de 133 (42.9%)
     • Muestras afectadas: 215 de 513 (41.9%)
@@ -28,6 +30,7 @@ ANÁLISIS DEL PROBLEMA
     • Accuracy ajustado:   42.6%
 
   CONCLUSIÓN:
+
     El bajo accuracy general (24.8%) se debe principalmente
     a 57 enfermedades que la red NO puede distinguir (0% accuracy).
 
@@ -37,21 +40,19 @@ ANÁLISIS DEL PROBLEMA
     Esto sugiere que esas 57 enfermedades tienen patrones
     binarios muy similares o idénticos entre sí.
 
-INTERPRETACIÓN
+INTERPRETACIÓN:
   El accuracy de 24.76% es ESPERADO dado el problema:
 
   LIMITACIÓN FUNDAMENTAL:
     • Clases a distinguir:  133
     • Features disponibles: 20
-    • Ratio clases/features: 6.65 (CRÍTICO > 3)
+    • Ratio clases/features: 6.65 (CRÍTICO > 3) ! VER! 
 
   Con solo 20 bits binarios es matemáticamente muy difícil
   distinguir entre 133 enfermedades diferentes.
 
   REFERENCIA:
-    • Análisis previo predijo: 20-30% accuracy
     • Resultado obtenido:      24.76%
-    • Conclusión: ✓ Dentro del rango esperado
 
 TOP 10 ENFERMEDADES (MEJOR ACCURACY)
   pancytopenia                            : 100.0% (1/1)

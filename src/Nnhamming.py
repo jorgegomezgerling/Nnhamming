@@ -57,7 +57,7 @@ class Nnhamming:
         return distance
 
 
-    def predict(self, vector, k=1):
+    def predict(self, vector, k=1, epsilon_factor=1.0, return_iterations=False):
         """
         Función que toma un vector y un parametro k.
         Convierte el vector a vector bipolar.
@@ -66,11 +66,13 @@ class Nnhamming:
         Args:
             vector (vector): vector a comparar.
             k (escalar): número de posibles candidatos. Por default establecido en el candidato más fuerte = 1.
+            epsilon_factor (float): multiplicador del epsilon para ajustar inhibición (default=1.0)
+            return_iterations (bool): si True, devuelve también el número de iteraciones usadas (default=False)
         
         Returns:
-            lista_candidatos (list): enfemerdades con su nivel de confianza.
+            Si return_iterations=False: lista de tuplas [(enfermedad, confianza), ...]
+            Si return_iterations=True: tupla (lista, iteraciones_usadas)
         """
-
         vector_bipolar = [1 if x == 1 else -1 for x in vector]
         if len(vector) != len(self.prototipos[0]):
             return None
@@ -78,10 +80,14 @@ class Nnhamming:
         activaciones = [len(p) - self.calculate_distance(vector_bipolar, p)
                         for p in self.prototipos]
 
-        M = len(activaciones) # Cuantas compiten
-        epsilon = 1.0 / (M + 1)
+        M = len(activaciones)
+        epsilon = epsilon_factor / (M + 1)
 
-        for _ in range(20):  # tope
+        iteraciones_usadas = 0
+        
+        for iteracion in range(20):
+            iteraciones_usadas = iteracion + 1
+            
             nuevas = activaciones[:]
             for i in range(M):
                 inhibicion = epsilon * (sum(activaciones) - activaciones[i])
@@ -91,11 +97,21 @@ class Nnhamming:
 
             if sum(a > 0 for a in activaciones) == 1:
                 break
+        
+        # # Verificar si todos los candidatos fueron eliminados
+        # activos = sum(a > 0 for a in activaciones)
+        # if activos == 0 and epsilon_factor >= 2.0:  #Solo alertar con epsilon alto
+        #     print(f"WARNING: Epsilon {epsilon:.6f} (factor={epsilon_factor}) eliminó todos los candidatos")
 
         indices_ordenados = sorted(range(M), key=lambda i: activaciones[i], reverse=True)
         k = min(k, len(indices_ordenados))
-        return [(self.etiquetas[i], activaciones[i] / len(vector)) for i in indices_ordenados[:k]]
-
+        
+        resultados = [(self.etiquetas[i], activaciones[i] / len(vector)) for i in indices_ordenados[:k]]
+        
+        if return_iterations:
+            return resultados, iteraciones_usadas
+        else:
+            return resultados
 
 
 
