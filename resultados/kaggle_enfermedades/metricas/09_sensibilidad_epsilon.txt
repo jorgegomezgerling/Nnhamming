@@ -1,0 +1,36 @@
+DATASET: KAGGLE - Diagnóstico de Enfermedades
+
+SENSIBILIDAD DEL PARÁMETRO EPSILON
+
+CONFIGURACIÓN
+  Train:             2051 muestras
+  Test:              513 muestras
+  Prototipos:        2051
+  Epsilon factors:   [0.1, 0.5, 1.0, 2.0, 5.0, 10.0]
+
+RESULTADOS
+   ε factor      ε real    Accuracy   Iter. prom.
+  ---------  ----------  ----------  ------------
+        0.1    0.000049      24.37%          20.0 *
+        0.5    0.000244      24.37%          20.0  
+        1.0    0.000487      24.37%          20.0  
+        2.0    0.000975       1.36%          19.9  
+        5.0    0.002437       0.58%          20.0  
+       10.0    0.004873       0.58%          20.0  
+
+  * Mejor accuracy
+
+INTERPRETACIÓN
+  EPSILON = epsilon_factor / (M + 1)
+  Donde M = 2051 prototipos
+
+  REGIÓN ESTABLE (ε ≤ 1.0):
+    Accuracy constante, competencia equilibrada
+
+  REGIÓN DE COLAPSO (ε ≥ 2.0):
+    Accuracy <2%, inhibición excesiva
+
+CONCLUSIÓN
+  Punto de quiebre crítico entre ε = 1.0 y ε = 2.0.
+  El valor por defecto (ε = 1.0) es óptimo.
+  Las 20 iteraciones son suficientes.

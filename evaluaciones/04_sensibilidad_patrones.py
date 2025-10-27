@@ -14,13 +14,18 @@ import os
 
 sys.path.append("../src")
 from Nnhamming import Nnhamming
+from config import get_dataset_config
 
-os.makedirs('../resultados/graficos', exist_ok=True)
-os.makedirs('../resultados/metricas', exist_ok=True)
+config = get_dataset_config()
+dataset_id = config['id']
+dataset_nombre = config['nombre']
 
-df = pd.read_csv('../dataset/gold/kaggle_dataset.csv')
-X = df.drop('prognosis', axis=1)
-Y = df['prognosis']
+os.makedirs(f'../resultados/{dataset_id}/graficos', exist_ok=True)
+os.makedirs(f'../resultados/{dataset_id}/metricas', exist_ok=True)
+
+df = pd.read_csv(config['path'])
+X = df.drop(config['target'], axis=1)
+Y = df[config['target']]
 
 X_train_full, X_test, Y_train_full, Y_test = train_test_split(
     X, Y,
@@ -48,7 +53,7 @@ for idx, porcentaje in enumerate(porcentajes):
         Y_train_sub = Y_train_full
     
     train_df = X_train_sub.copy()
-    train_df['prognosis'] = Y_train_sub.values
+    train_df[config['target']] = Y_train_sub.values
     
     red = Nnhamming()
     red.fit_from_df(train_df)
@@ -81,8 +86,6 @@ df_resultados = pd.DataFrame(resultados)
 
 mejor_idx = df_resultados['accuracy'].idxmax()
 mejor = df_resultados.iloc[mejor_idx]
-peor_idx = df_resultados['accuracy'].idxmin()
-peor = df_resultados.iloc[peor_idx]
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
@@ -121,24 +124,23 @@ ax2.set_title('Prototipos Generados', fontweight='bold', fontsize=12)
 ax2.grid(True, alpha=0.3, axis='y')
 ax2.set_xticks(df_resultados['porcentaje'])
 
-plt.suptitle(f'Sensibilidad a Cantidad de Patrones | Test fijo: {len(X_test)} muestras', 
+plt.suptitle(f'{dataset_nombre} | Sensibilidad a Patrones | Test: {len(X_test)} muestras', 
              fontsize=14, fontweight='bold')
 plt.tight_layout(rect=[0, 0, 1, 0.96])
-plt.savefig('../resultados/graficos/09_sensibilidad_patrones.png', dpi=200, bbox_inches='tight')
+plt.savefig(f'../resultados/{dataset_id}/graficos/09_sensibilidad_patrones.png', dpi=200, bbox_inches='tight')
 plt.close()
 
-with open('../resultados/metricas/08_sensibilidad_patrones.txt', 'w', encoding='utf-8') as f:
-
-    f.write("SENSIBILIDAD A CANTIDAD DE PATRONES\n")
-
+with open(f'../resultados/{dataset_id}/metricas/08_sensibilidad_patrones.txt', 'w', encoding='utf-8') as f:
+    f.write(f"DATASET: {dataset_nombre}\n\n")
     
-    f.write("CONFIGURACIÓN:\n")
+    f.write("SENSIBILIDAD A CANTIDAD DE PATRONES\n\n")
+    
+    f.write("CONFIGURACIÓN\n")
     f.write(f"  Train completo:    {len(X_train_full)} muestras\n")
     f.write(f"  Test (fijo):       {len(X_test)} muestras\n")
     f.write(f"  Porcentajes:       25%, 50%, 75%, 100%\n\n")
     
     f.write("RESULTADOS\n")
-    
     f.write(f"  {'Train':>6s}  {'Muestras':>9s}  {'Prototipos':>11s}  {'Accuracy':>10s}\n")
     f.write(f"  {'-'*6}  {'-'*9}  {'-'*11}  {'-'*10}\n")
     
@@ -151,19 +153,16 @@ with open('../resultados/metricas/08_sensibilidad_patrones.txt', 'w', encoding='
         f.write(f"  {porc:5.0f}%  {muestras:9d}  {prototipos:11d}  {accuracy:9.2f}%\n")
     
     mejora = df_resultados.iloc[-1]['accuracy'] - df_resultados.iloc[0]['accuracy']
-    f.write(f"\n  Mejora (25% → 100%): {'+' if mejora >= 0 else ''}{mejora:.2f}% puntos\n\n")
+    f.write(f"\n  Mejora (25% → 100%): {'+' if mejora >= 0 else ''}{mejora:.2f}%\n\n")
     
     f.write("CONCLUSIÓN\n")
-
-    
     f.write(f"  Con 25% del train: {df_resultados.iloc[0]['accuracy']:.2f}%\n")
     f.write(f"  Con 100% del train: {df_resultados.iloc[-1]['accuracy']:.2f}%\n\n")
     
     if abs(mejora) < 2:
-        f.write(f"  La cantidad de datos tiene poco impacto en el accuracy.\n")
-        f.write(f"  El problema está limitado por la separabilidad, no por datos.\n\n")
+        f.write(f"  La cantidad de datos tiene poco impacto.\n")
+        f.write(f"  El problema está limitado por separabilidad, no por datos.\n")
     elif mejora > 0:
-        f.write(f"  Más datos mejoran el accuracy en {mejora:.2f}% puntos.\n\n")
+        f.write(f"  Más datos mejoran el accuracy en {mejora:.2f}%.\n")
     else:
-        f.write(f"  Más datos empeoran el accuracy en {abs(mejora):.2f}% puntos.\n")
-        f.write(f"  Posible presencia de ruido o casos atípicos en el train.\n\n")
+        f.write(f"  Más datos empeoran el accuracy (posible ruido en train).\n")

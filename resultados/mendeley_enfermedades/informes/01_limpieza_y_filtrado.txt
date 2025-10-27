@@ -1,0 +1,30 @@
+LIMPIEZA Y FILTRADO: Mendeley Dataset
+
+DATASET ORIGINAL
+  Dimensiones: (757, 173)
+  Clases: 84
+
+LIMPIEZA DE NOMBRES
+  Columnas renombradas: 76
+
+ELIMINACIÓN DE COLUMNAS INVÁLIDAS
+  Features originales: 171
+  Columnas inválidas eliminadas: 97
+
+ELIMINACIÓN DE DUPLICADOS
+  Columnas duplicadas eliminadas: 3
+  Nombres duplicados: ['Joint_Pain']
+
+ELIMINACIÓN CLASE 'NONE'
+  Casos eliminados: 19
+
+FILTRADO CLASES RARAS (<10 casos)
+  Clases eliminadas: 59
+  Muestras eliminadas: 380
+
+RESULTADO FINAL
+  Dimensiones: (358, 75)
+  Features: 74
+  Clases: 24
+  Muestras: 358
+  Rango casos/clase: 10-41

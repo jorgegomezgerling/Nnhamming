@@ -8,13 +8,19 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+from config import get_dataset_config  
 
-os.makedirs('../resultados/graficos', exist_ok=True)
-os.makedirs('../resultados/metricas', exist_ok=True)
+config = get_dataset_config()
+dataset_id = config['id']
+dataset_nombre = config['nombre']
+dataset_fuente = config.get('fuente', 'Desconocida')
 
-df = pd.read_csv('../dataset/gold/kaggle_dataset.csv')
-X = df.drop('prognosis', axis=1)
-Y = df['prognosis']
+df = pd.read_csv(config['path'])  # PARAMETRIZADO
+X = df.drop(config['target'], axis=1)
+Y = df[config['target']]
+
+os.makedirs(f'../resultados/{dataset_id}/graficos', exist_ok=True)
+os.makedirs(f'../resultados/{dataset_id}/metricas', exist_ok=True)
 
 n_muestras = len(df)
 n_enfermedades = Y.nunique()
@@ -40,6 +46,8 @@ ax1.grid(True, alpha=0.3, axis='y')
 ax2.axis('off')
 resumen = f"""CARACTERIZACIÓN DEL PROBLEMA
 
+DATASET: {dataset_nombre}
+Fuente:  {dataset_fuente}
 
 DIMENSIONES:
   • Muestras:              {n_muestras}
@@ -62,50 +70,57 @@ ax2.text(0.05, 0.95, resumen, transform=ax2.transAxes,
          fontsize=10, verticalalignment='top', family='monospace',
          bbox=dict(boxstyle='round', facecolor='lightblue', alpha=0.3))
 
-plt.suptitle('Análisis Dataset Gold: Condiciones Iniciales', 
+# Título con nombre del dataset
+plt.suptitle(f'{dataset_nombre} | Análisis Gold Dataset', 
              fontsize=13, fontweight='bold')
 plt.tight_layout(rect=[0, 0, 1, 0.96])
-plt.savefig('../resultados/graficos/00_analisis_dataset_gold.png', dpi=200, bbox_inches='tight')
+
+# Guardar con ruta específica del dataset
+plt.savefig(f'../resultados/{dataset_id}/graficos/00_analisis_dataset_gold.png', 
+            dpi=200, bbox_inches='tight')
 plt.close()
 
-with open('../resultados/metricas/00_caracterizacion_problema.txt', 'w', encoding='utf-8') as f:
+with open(f'../resultados/{dataset_id}/metricas/00_caracterizacion_problema.txt', 
+          'w', encoding='utf-8') as f:
+
+
+    f.write(f"DATASET: {dataset_nombre}\n")
+    f.write(f"Fuente:  {dataset_fuente}\n")
 
     f.write("CARACTERIZACIÓN DEL PROBLEMA: DATASET GOLD\n")
 
-    
     f.write("DIMENSIONES:\n")
-    f.write(f"  Muestras totales:      {n_muestras}\n")
-    f.write(f"  Enfermedades únicas:   {n_enfermedades}\n")
-    f.write(f"  Features binarias:     {n_features}\n\n")
-    
+    f.write(f"Muestras totales: {n_muestras}\n")
+    f.write(f"Enfermedades únicas: {n_enfermedades}\n")
+    f.write(f"Features binarias: {n_features}\n\n")
+
     f.write("DISTRIBUCIÓN DE CASOS\n")
+
     f.write(f"  Mínimo:    {casos_por_enfermedad.min()} casos\n")
     f.write(f"  Máximo:    {casos_por_enfermedad.max()} casos\n")
     f.write(f"  Promedio:  {casos_por_enfermedad.mean():.1f} casos\n")
-    f.write(f"  Mediana:   {casos_por_enfermedad.median():.0f} casos\n\n")
     f.write(f"  Enfermedades con <10 casos: {enfermedades_raras}\n\n")
     
     f.write("ANÁLISIS TEÓRICO VS PRÁCTICO\n")
-
+    
     f.write(f"TEÓRICAMENTE:\n")
-    f.write(f"  Bits necesarios: log₂({n_enfermedades}) = {np.log2(n_enfermedades):.2f}\n")
-    f.write(f"  Redondeado:                      {bits_necesarios} bits\n")
-    f.write(f"  Bits disponibles:                {n_features} bits\n")
-    f.write(f"  Gap:                             {n_features - bits_necesarios} bits: Suficiente\n\n")
+    f.write(f"Bits necesarios: log₂({n_enfermedades}) = {np.log2(n_enfermedades):.2f}\n")
+    f.write(f"Redondeado: {bits_necesarios} bits\n")
+    f.write(f"Bits disponibles: {n_features} bits\n")
+    f.write(f"Gap: {n_features - bits_necesarios} bits: Suficiente\n\n")
     
     f.write(f"EN PRÁCTICA:\n")
     f.write(f"  Ratio clases/features: {n_enfermedades}/{n_features} = {ratio_clases_features:.2f}\n\n")
     
-    f.write(f"  Un ratio alto indica dificultad para separar clases:\n")
-    f.write(f"    • Muchas enfermedades deben compartir patrones similares\n")
-    f.write(f"    • Pérdida de información en pipeline (~65% acumulada)\n")
-    f.write(f"    • Desbalanceo: {enfermedades_raras} enfermedades con <10 casos\n\n")
+    f.write(f"Un ratio alto indica dificultad para separar clases:\n")
+    f.write(f"  • Muchas enfermedades deben compartir patrones similares\n")
+    f.write(f"  • Pérdida de información en pipeline (~65% acumulada)\n")
+    f.write(f"  • Desbalanceo: {enfermedades_raras} enfermedades con <10 casos\n\n")
     
-    f.write(f"  Bits útiles estimados: ~7 bits (vs 7.06 necesarios)\n\n")
+    f.write(f"  Bits útiles estimados: ~7 bits (vs {bits_necesarios} necesarios)\n\n")
     
-
     f.write("CONCLUSIÓN\n")
-
+    
     f.write(f"  El problema consiste en distinguir {n_enfermedades} enfermedades\n")
     f.write(f"  usando {n_features} bits binarios.\n\n")
     f.write(f"  Factores que dificultan la clasificación:\n")
@@ -113,3 +128,5 @@ with open('../resultados/metricas/00_caracterizacion_problema.txt', 'w', encodin
     f.write(f"    • Pérdida de información en pipeline (~65%)\n")
     f.write(f"    • Desbalanceo: {enfermedades_raras} enfermedades con <10 casos\n")
     f.write(f"    • Similaridad esperada entre enfermedades\n\n")
+
+print(f"Análisis completado para: {dataset_nombre}")

@@ -1,0 +1,70 @@
+
+INFORME: ANÁLISIS DE BINARIZACIÓN
+
+TRANSFORMACIÓN:
+  Input:   10 componentes discretas (valores: 0, 1, 2)
+  Output:  20 features binarias (valores: 0, 1)
+  Muestras: 2564
+
+CODIFICACIÓN UTILIZADA
+
+   Valor discreto  →  Bits binarios
+   ────────────────────────────────
+        0 (bajo)   →      1  0
+        1 (medio)  →      1  1
+        2 (alto)   →      0  1
+
+JUSTIFICACIÓN:
+    Compatible con Red de Hamming
+
+VERIFICACIÓN
+
+  Dataset discretizado: (2564, 11)
+  Dataset binarizado:   (2564, 21)
+  
+  Cálculo: 10 componentes × 2 bits = 20 features ✓
+
+
+BALANCE DE BITS
+
+
+  Total de bits: 51,280
+  
+  Distribución:
+    Ceros (0): 17,100 bits (33.3%)
+    Unos  (1): 34,180 bits (66.7%)
+
+  NOTA: El desbalance (más unos que ceros) es esperado debido a la
+        codificación elegida. El valor 1 genera dos unos (11), mientras
+        que los valores 0 y 2 generan un uno y un cero cada uno.
+        
+
+EJEMPLO DE TRANSFORMACIÓN
+
+Paciente #0 - Enfermedad: hypertensive disease
+
+  Componente    Discreto  →  Binario
+  ──────────────────────────────────
+  Comp_2          2      →    0 1
+  Comp_1          2      →    0 1
+  Comp_3          2      →    0 1
+  Comp_7          1      →    1 1
+  Comp_4          0      →    1 0
+  Comp_6          2      →    0 1
+  Comp_11         0      →    1 0
+  Comp_5          2      →    0 1
+  Comp_10         1      →    1 1
+  Comp_8          0      →    1 0
+
+
+RESULTADO FINAL
+
+Shape final:      (2564, 21)
+
+  1. PCA:              400 síntomas    → 100 componentes (70% varianza)
+  2. Mutual Info:      100 componentes → 10 componentes (top MI)
+  3. Discretización:   Valores continuos → 3 valores discretos (0,1,2)
+  4. Binarización:     3 valores discretos → 20 bits binarios
+
+RESULTADO: 400 features originales → 20 features binarias
+

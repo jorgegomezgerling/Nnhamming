@@ -1,0 +1,29 @@
+DATASET: KAGGLE - Diagnóstico de Enfermedades
+
+TEST DE RUIDO: ROBUSTEZ DE LA RED
+
+CONFIGURACIÓN
+  Features:          20 bits
+  Train:             2051 muestras
+  Test:              513 muestras
+  Niveles de ruido:  0%, 5%, 10%, 15%, 20%, 25%, 30%
+
+RESULTADOS
+    Ruido    Bits     Aciertos    Accuracy     Pérdida
+  -------  ------  -----------  ----------  ----------
+      0%       0   125/ 513      24.37%           -
+      5%       1   105/ 513      20.47%      -3.90%
+     10%       2    81/ 513      15.79%      -8.58%
+     15%       3    66/ 513      12.87%     -11.50%
+     20%       4    32/ 513       6.24%     -18.13%
+     25%       5    25/ 513       4.87%     -19.49%
+     30%       6    17/ 513       3.31%     -21.05%
+
+  Degradación total (0% → 30%): -21.05%
+
+CONCLUSIÓN
+  Accuracy base: 24.37%
+  Accuracy con 30% ruido: 3.31%
+  Pérdida total: 21.05%
+
+  La red es sensible al ruido (esperado con distancia de Hamming).

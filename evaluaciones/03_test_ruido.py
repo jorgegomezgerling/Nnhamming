@@ -1,6 +1,8 @@
 """
+
 Evaluación: Test de Ruido
 Evalúa la robustez de la red agregando ruido a los patrones de test
+
 """
 
 import pandas as pd
@@ -12,9 +14,14 @@ import os
 
 sys.path.append("../src")
 from Nnhamming import Nnhamming
+from config import get_dataset_config
 
-os.makedirs('../resultados/graficos', exist_ok=True)
-os.makedirs('../resultados/metricas', exist_ok=True)
+config = get_dataset_config()
+dataset_id = config['id']
+dataset_nombre = config['nombre']
+
+os.makedirs(f'../resultados/{dataset_id}/graficos', exist_ok=True)
+os.makedirs(f'../resultados/{dataset_id}/metricas', exist_ok=True)
 
 def agregar_ruido(vector, porcentaje_ruido):
     """
@@ -38,9 +45,9 @@ def agregar_ruido(vector, porcentaje_ruido):
     
     return vector_ruidoso
 
-df = pd.read_csv('../dataset/gold/kaggle_dataset.csv')
-X = df.drop('prognosis', axis=1)
-Y = df['prognosis']
+df = pd.read_csv(config['path'])
+X = df.drop(config['target'], axis=1)
+Y = df[config['target']]
 
 n_features = X.shape[1]
 
@@ -52,7 +59,7 @@ X_train, X_test, Y_train, Y_test = train_test_split(
 )
 
 train_df = X_train.copy()
-train_df['prognosis'] = Y_train.values
+train_df[config['target']] = Y_train.values
 
 red = Nnhamming()
 red.fit_from_df(train_df)
@@ -135,26 +142,24 @@ ax2.set_ylabel('Pérdida de Accuracy (%)', fontsize=11, fontweight='bold')
 ax2.set_title('Pérdida Acumulada vs Baseline', fontweight='bold', fontsize=12)
 ax2.grid(True, alpha=0.3, axis='y')
 
-plt.suptitle(f'Test de Ruido | {n_features} bits | Test: {len(X_test)} muestras', 
+plt.suptitle(f'{dataset_nombre} | Test de Ruido | {n_features} bits | Test: {len(X_test)} muestras', 
              fontsize=14, fontweight='bold')
 plt.tight_layout(rect=[0, 0, 1, 0.96])
-plt.savefig('../resultados/graficos/08_test_ruido.png', dpi=200, bbox_inches='tight')
+plt.savefig(f'../resultados/{dataset_id}/graficos/08_test_ruido.png', dpi=200, bbox_inches='tight')
 plt.close()
 
-with open('../resultados/metricas/06_test_ruido.txt', 'w', encoding='utf-8') as f:
-
-    f.write("TEST DE RUIDO: ROBUSTEZ DE LA RED\n")
-
+with open(f'../resultados/{dataset_id}/metricas/06_test_ruido.txt', 'w', encoding='utf-8') as f:
+    f.write(f"DATASET: {dataset_nombre}\n\n")
     
-    f.write("CONFIGURACIÓN:\n")
+    f.write("TEST DE RUIDO: ROBUSTEZ DE LA RED\n\n")
+    
+    f.write("CONFIGURACIÓN\n")
     f.write(f"  Features:          {n_features} bits\n")
     f.write(f"  Train:             {len(X_train)} muestras\n")
     f.write(f"  Test:              {len(X_test)} muestras\n")
-    f.write(f"  Niveles de ruido:  0%, 5%, 10%, 15%, 20%, 25%, 30%\n")
-    f.write(f"  Seed:              42\n\n")
+    f.write(f"  Niveles de ruido:  0%, 5%, 10%, 15%, 20%, 25%, 30%\n\n")
     
     f.write("RESULTADOS\n")
-    
     f.write(f"  {'Ruido':>7s}  {'Bits':>6s}  {'Aciertos':>11s}  {'Accuracy':>10s}  {'Pérdida':>10s}\n")
     f.write(f"  {'-'*7}  {'-'*6}  {'-'*11}  {'-'*10}  {'-'*10}\n")
     
@@ -169,20 +174,16 @@ with open('../resultados/metricas/06_test_ruido.txt', 'w', encoding='utf-8') as 
         f.write(f"  {ruido:5.0f}%  {bits:6d}  {aciertos:4d}/{total:4d}  {accuracy:9.2f}%  "
                 f"{'-' if ruido == 0 else f'-{perdida:.2f}%':>10s}\n")
     
-    f.write(f"\n  Degradación total (0% → 30%): -{degradacion_total:.2f}% puntos\n\n")
+    f.write(f"\n  Degradación total (0% → 30%): -{degradacion_total:.2f}%\n\n")
     
-
     f.write("CONCLUSIÓN\n")
-    
-    f.write(f"  La red parte de un accuracy base de {accuracy_base:.2f}%.\n\n")
-    
-    f.write(f"  Con 30% de ruido (~{int(n_features*0.30)} bits cambiados), el accuracy\n")
-    f.write(f"  cae a {accuracy_30:.2f}%, representando una pérdida de {degradacion_total:.2f}%.\n\n")
+    f.write(f"  Accuracy base: {accuracy_base:.2f}%\n")
+    f.write(f"  Accuracy con 30% ruido: {accuracy_30:.2f}%\n")
+    f.write(f"  Pérdida total: {degradacion_total:.2f}%\n\n")
     
     if degradacion_total < 10:
-        f.write(f"  La red muestra robustez razonable ante perturbaciones.\n\n")
+        f.write(f"  La red muestra robustez razonable ante perturbaciones.\n")
     else:
-        f.write(f"  La red es sensible al ruido, lo cual es esperado dado que utiliza\n")
-        f.write(f"  distancia de Hamming para clasificar (cada bit cuenta).\n\n")
+        f.write(f"  La red es sensible al ruido (esperado con distancia de Hamming).\n")
 
-df_resultados.to_csv('../resultados/metricas/07_test_ruido_detalle.csv', index=False)
+df_resultados.to_csv(f'../resultados/{dataset_id}/metricas/07_test_ruido_detalle.csv', index=False)

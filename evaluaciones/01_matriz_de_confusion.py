@@ -17,13 +17,18 @@ import os
 
 sys.path.append("../src")
 from Nnhamming import Nnhamming
+from config import get_dataset_config
 
-os.makedirs('../resultados/graficos', exist_ok=True)
-os.makedirs('../resultados/metricas', exist_ok=True)
+config = get_dataset_config()
+dataset_id = config['id']
+dataset_nombre = config['nombre']
 
-df = pd.read_csv('../dataset/gold/kaggle_dataset.csv')
-X = df.drop('prognosis', axis=1)
-Y = df['prognosis']
+os.makedirs(f'../resultados/{dataset_id}/graficos', exist_ok=True)
+os.makedirs(f'../resultados/{dataset_id}/metricas', exist_ok=True)
+
+df = pd.read_csv(config['path'])
+X = df.drop(config['target'], axis=1)
+Y = df[config['target']]
 
 n_enfermedades = Y.nunique()
 n_features = X.shape[1]
@@ -36,7 +41,7 @@ X_train, X_test, Y_train, Y_test = train_test_split(
 )
 
 train_df = X_train.copy()
-train_df['prognosis'] = Y_train.values
+train_df[config['target']] = Y_train.values
 
 red = Nnhamming()
 red.fit_from_df(train_df)
@@ -90,79 +95,46 @@ correctas_no_cero = enf_no_cero.apply(lambda row: int(row['correctas']), axis=1)
 accuracy_sin_ceros = correctas_no_cero / muestras_no_cero * 100 if muestras_no_cero > 0 else 0
 
 matriz_df = pd.DataFrame(matriz, index=enfermedades, columns=enfermedades)
-matriz_df.to_csv('../resultados/metricas/01_matriz_confusion_completa.csv')
+matriz_df.to_csv(f'../resultados/{dataset_id}/metricas/01_matriz_confusion_completa.csv')
 
-df_metricas.to_csv('../resultados/metricas/03_metricas_por_enfermedad.csv', index=False)
+df_metricas.to_csv(f'../resultados/{dataset_id}/metricas/03_metricas_por_enfermedad.csv', index=False)
 
-with open('../resultados/metricas/02_metricas_confusion.txt', 'w', encoding='utf-8') as f:
-    f.write("MÉTRICAS: MATRIZ DE CONFUSIÓN\n")
+with open(f'../resultados/{dataset_id}/metricas/02_metricas_confusion.txt', 'w', encoding='utf-8') as f:
+    f.write(f"DATASET: {dataset_nombre}\n\n")
     
-    f.write("CONFIGURACIÓN:\n")
-
-    f.write(f"  Train/Test split: 80/20\n")
-    f.write(f"  Stratified:       Sí\n")
-    f.write(f"  Random seed:      42\n")
+    f.write("CONFIGURACIÓN\n")
+    f.write(f"  Train/Test split: 80/20 (stratified)\n")
     f.write(f"  K (predicción):   1\n\n")
     
-    f.write("DATASET:\n")
-
+    f.write("DIMENSIONES\n")
     f.write(f"  Total muestras:   {len(df)}\n")
     f.write(f"  Enfermedades:     {n_enfermedades}\n")
     f.write(f"  Features:         {n_features}\n")
     f.write(f"  Train:            {len(X_train)} muestras\n")
     f.write(f"  Test:             {len(X_test)} muestras\n\n")
     
-    f.write("RESULTADOS GENERALES\n")
-
+    f.write("RESULTADOS\n")
     f.write(f"  Accuracy:         {accuracy*100:.2f}%\n")
     f.write(f"  Correctas:        {correctas}/{len(y_real)}\n")
     f.write(f"  Incorrectas:      {incorrectas}/{len(y_real)}\n\n")
     
-
-    f.write("ANÁLISIS DEL PROBLEMA\n")
-    
-    f.write(f"  ENFERMEDADES CON 0% ACCURACY:\n")
-    f.write(f"    • Cantidad:           {n_enf_cero} de {n_enfermedades} ({n_enf_cero/n_enfermedades*100:.1f}%)\n")
-    f.write(f"    • Muestras afectadas: {int(muestras_cero)} de {len(Y_test)} ({muestras_cero/len(Y_test)*100:.1f}%)\n\n")
-    
-    f.write(f"  ACCURACY SIN ESAS ENFERMEDADES:\n")
-    f.write(f"    • Muestras analizadas: {int(muestras_no_cero)}\n")
-    f.write(f"    • Correctas:           {int(correctas_no_cero)}\n")
-    f.write(f"    • Accuracy ajustado:   {accuracy_sin_ceros:.1f}%\n\n")
-    
-    f.write(f"  CONCLUSIÓN:\n")
-    f.write(f"    El bajo accuracy general ({accuracy*100:.1f}%) se debe principalmente\n")
-    f.write(f"    a {n_enf_cero} enfermedades que la red NO puede distinguir (0% accuracy).\n\n")
-    f.write(f"    Para las {len(enf_no_cero)} enfermedades restantes, el accuracy es\n")
-    f.write(f"    de {accuracy_sin_ceros:.1f}%, lo cual es razonable dado el problema.\n\n")
-    f.write(f"    Esto sugiere que esas {n_enf_cero} enfermedades tienen patrones\n")
-    f.write(f"    binarios muy similares o idénticos entre sí.\n\n")
+    f.write("ANÁLISIS POR ACCURACY\n")
+    f.write(f"  Enfermedades con 0% accuracy:  {n_enf_cero}/{n_enfermedades} ({n_enf_cero/n_enfermedades*100:.1f}%)\n")
+    f.write(f"  Muestras afectadas:            {int(muestras_cero)}/{len(Y_test)} ({muestras_cero/len(Y_test)*100:.1f}%)\n")
+    f.write(f"  Accuracy sin esas enfermedades: {accuracy_sin_ceros:.1f}%\n\n")
     
     f.write("INTERPRETACIÓN\n")
-
-    f.write(f"  El accuracy de {accuracy*100:.2f}% es ESPERADO dado el problema:\n\n")
-    f.write(f"  LIMITACIÓN FUNDAMENTAL:\n")
-    f.write(f"    • Clases a distinguir:  {n_enfermedades}\n")
-    f.write(f"    • Features disponibles: {n_features}\n")
-    f.write(f"    • Ratio clases/features: {n_enfermedades/n_features:.2f} (CRÍTICO > 3)\n\n")
-    f.write(f"  Con solo {n_features} bits binarios es matemáticamente muy difícil\n")
-    f.write(f"  distinguir entre {n_enfermedades} enfermedades diferentes.\n\n")
-    f.write(f"  REFERENCIA:\n")
-    f.write(f"    • Análisis previo predijo: 20-30% accuracy\n")
-    f.write(f"    • Resultado obtenido:      {accuracy*100:.2f}%\n")
-    f.write(f"    • Conclusión: ✓ Dentro del rango esperado\n\n")
+    f.write(f"  Ratio clases/features: {n_enfermedades}/{n_features} = {n_enfermedades/n_features:.2f}\n")
+    f.write(f"  El bajo accuracy es esperable con este ratio alto.\n")
+    f.write(f"  {n_enf_cero} enfermedades tienen patrones muy similares (0% accuracy).\n\n")
     
-
-    f.write("TOP 10 ENFERMEDADES (MEJOR ACCURACY)\n")
-    
+    f.write("TOP 10 MEJOR ACCURACY\n")
     for i, row in df_metricas.head(10).iterrows():
         f.write(f"  {row['enfermedad'][:40]:40s}: {row['accuracy']:5.1f}% "
                 f"({int(row['correctas'])}/{int(row['muestras_test'])})\n")
+    f.write("\n")
     
-
-    f.write("BOTTOM 10 ENFERMEDADES (PEOR ACCURACY)\n")
-
-    
+    f.write("TOP 10 PEOR ACCURACY\n")
     for i, row in df_metricas.tail(10).iterrows():
         f.write(f"  {row['enfermedad'][:40]:40s}: {row['accuracy']:5.1f}% "
                 f"({int(row['correctas'])}/{int(row['muestras_test'])})\n")
@@ -185,7 +157,7 @@ sns.heatmap(
     linecolor='gray'
 )
 
-plt.title(f'Matriz de Confusión - Top 20 Enfermedades Más Frecuentes en Test\n' +
+plt.title(f'{dataset_nombre} | Matriz de Confusión - Top 20\n' +
           f'Accuracy: {accuracy*100:.2f}% | Test: {len(X_test)} muestras | K=1', 
           fontsize=14, fontweight='bold', pad=20)
 plt.xlabel('Predicción', fontsize=12, fontweight='bold')
@@ -194,7 +166,7 @@ plt.xticks(rotation=45, ha='right', fontsize=9)
 plt.yticks(rotation=0, fontsize=9)
 plt.tight_layout()
 
-plt.savefig('../resultados/graficos/05_matriz_confusion_top20.png', dpi=200, bbox_inches='tight')
+plt.savefig(f'../resultados/{dataset_id}/graficos/05_matriz_confusion_top20.png', dpi=200, bbox_inches='tight')
 plt.close()
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
@@ -224,7 +196,7 @@ ax2.text(5, ax2.get_ylim()[1]*0.85, f'{n_enf_cero} enfermedades\ncon 0% accuracy
          bbox=dict(boxstyle='round', facecolor='lightcoral', alpha=0.7),
          fontsize=10, fontweight='bold')
 
-plt.suptitle('Análisis de Accuracy por Enfermedad', fontsize=14, fontweight='bold')
+plt.suptitle(f'{dataset_nombre} | Análisis de Accuracy', fontsize=14, fontweight='bold')
 plt.tight_layout(rect=[0, 0, 1, 0.96])
-plt.savefig('../resultados/graficos/06_accuracy_por_enfermedad.png', dpi=200, bbox_inches='tight')
+plt.savefig(f'../resultados/{dataset_id}/graficos/06_accuracy_por_enfermedad.png', dpi=200, bbox_inches='tight')
 plt.close()

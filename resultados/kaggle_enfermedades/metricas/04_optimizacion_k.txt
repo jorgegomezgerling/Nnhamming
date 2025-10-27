@@ -1,0 +1,30 @@
+DATASET: KAGGLE - Diagnóstico de Enfermedades
+
+OPTIMIZACIÓN DEL PARÁMETRO K
+
+CONFIGURACIÓN
+  Dataset:       2564 muestras, 133 enfermedades
+  Train:         2051 muestras
+  Test:          513 muestras
+  K evaluados:   [1, 2, 3, 4, 5, 7, 10]
+
+RESULTADOS POR K
+    K    Aciertos    Accuracy    Mejora vs k=1
+  ---  ----------  ----------  ---------------
+    1   125/ 513      24.37%           +0.00%  
+    2   192/ 513      37.43%          +13.06%  
+    3   234/ 513      45.61%          +21.25%  
+    4   267/ 513      52.05%          +27.68%  
+    5   287/ 513      55.95%          +31.58%  
+    7   321/ 513      62.57%          +38.21%  
+   10   355/ 513      69.20%          +44.83% *
+
+  * Mejor K: 10
+
+INTERPRETACIÓN
+  Baseline (K=1): 24.37%
+  Mejor (K=10): 69.20%
+  Mejora: +44.83%
+
+  La respuesta correcta está entre los 10 candidatos
+  más cercanos en 69.2% de los casos.

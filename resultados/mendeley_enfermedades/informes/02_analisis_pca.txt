@@ -1,0 +1,31 @@
+ANÁLISIS PRE-PCA: Mendeley Dataset
+
+DATASET (SILVER01)
+  Features: 74
+  Muestras: 358
+  Clases: 24
+
+VARIANZA CAPTURADA POR COMPONENTES
+   10 componentes →  66.94%
+   15 componentes →  78.45%
+   20 componentes →  84.93%
+   25 componentes →  88.75%
+   30 componentes →  91.73%
+   35 componentes →  94.16%
+   40 componentes →  96.10% *
+   45 componentes →  97.86%
+   50 componentes →  99.29%
+   60 componentes → 100.00%
+   70 componentes → 100.00%
+
+  * Componentes seleccionados
+
+DECISIÓN
+  Componentes seleccionados: 40
+  Varianza capturada: 96.10%
+  Reducción: 74 → 40 features
+  Porcentaje reducción: 45.9%
+
+INTERPRETACIÓN
+  Con 40 componentes se retiene el 96.1%
+  de la varianza original, eliminando información redundante.
