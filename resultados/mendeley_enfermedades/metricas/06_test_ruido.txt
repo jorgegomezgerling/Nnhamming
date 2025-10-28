@@ -1,0 +1,28 @@
+DATASET: MENDELEY - Diagnóstico de Enfermedades
+
+TEST DE RUIDO: ROBUSTEZ DE LA RED
+
+CONFIGURACIÓN
+  Features:          20 bits
+  Train:             286 muestras
+  Test:              72 muestras
+  Niveles de ruido:  0%, 5%, 10%, 15%, 20%, 25%, 30%
+
+RESULTADOS
+    Ruido    Bits     Aciertos    Accuracy     Pérdida
+  -------  ------  -----------  ----------  ----------
+      0%       0    66/  72      91.67%           -
+      5%       1    64/  72      88.89%      -2.78%
+     10%       2    62/  72      86.11%      -5.56%
+     15%       3    58/  72      80.56%     -11.11%
+     20%       4    42/  72      58.33%     -33.33%
+     25%       5    33/  72      45.83%     -45.83%
+     30%       6    15/  72      20.83%     -70.83%
+
+  Degradación total (0% → 30%): -70.83%
+
+RESUMEN
+  Accuracy base: 91.67%
+  Accuracy con 30% ruido: 20.83%
+  Pérdida total: 70.83%
+

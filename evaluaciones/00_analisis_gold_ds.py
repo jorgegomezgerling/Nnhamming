@@ -13,9 +13,9 @@ from config import get_dataset_config
 config = get_dataset_config()
 dataset_id = config['id']
 dataset_nombre = config['nombre']
-dataset_fuente = config.get('fuente', 'Desconocida')
+dataset_fuente = config.get('fuente')
 
-df = pd.read_csv(config['path'])  # PARAMETRIZADO
+df = pd.read_csv(config['path'])
 X = df.drop(config['target'], axis=1)
 Y = df[config['target']]
 
@@ -63,19 +63,17 @@ DISTRIBUCIÓN:
   • Mín casos:             {casos_por_enfermedad.min()}
   • Máx casos:             {casos_por_enfermedad.max()}
   • Promedio:              {casos_por_enfermedad.mean():.1f}
-  • Enfermedades raras:    {enfermedades_raras}
+  • Enfermedades <10 casos: {enfermedades_raras}
 """
 
 ax2.text(0.05, 0.95, resumen, transform=ax2.transAxes,
          fontsize=10, verticalalignment='top', family='monospace',
          bbox=dict(boxstyle='round', facecolor='lightblue', alpha=0.3))
 
-# Título con nombre del dataset
 plt.suptitle(f'{dataset_nombre} | Análisis Gold Dataset', 
              fontsize=13, fontweight='bold')
 plt.tight_layout(rect=[0, 0, 1, 0.96])
 
-# Guardar con ruta específica del dataset
 plt.savefig(f'../resultados/{dataset_id}/graficos/00_analisis_dataset_gold.png', 
             dpi=200, bbox_inches='tight')
 plt.close()
@@ -83,50 +81,21 @@ plt.close()
 with open(f'../resultados/{dataset_id}/metricas/00_caracterizacion_problema.txt', 
           'w', encoding='utf-8') as f:
 
-
     f.write(f"DATASET: {dataset_nombre}\n")
-    f.write(f"Fuente:  {dataset_fuente}\n")
+    f.write(f"Fuente:  {dataset_fuente}\n\n")
 
-    f.write("CARACTERIZACIÓN DEL PROBLEMA: DATASET GOLD\n")
+    f.write("DIMENSIONES\n")
+    f.write(f"  Muestras:              {n_muestras}\n")
+    f.write(f"  Enfermedades:          {n_enfermedades}\n")
+    f.write(f"  Features binarias:     {n_features}\n\n")
 
-    f.write("DIMENSIONES:\n")
-    f.write(f"Muestras totales: {n_muestras}\n")
-    f.write(f"Enfermedades únicas: {n_enfermedades}\n")
-    f.write(f"Features binarias: {n_features}\n\n")
-
-    f.write("DISTRIBUCIÓN DE CASOS\n")
-
-    f.write(f"  Mínimo:    {casos_por_enfermedad.min()} casos\n")
-    f.write(f"  Máximo:    {casos_por_enfermedad.max()} casos\n")
-    f.write(f"  Promedio:  {casos_por_enfermedad.mean():.1f} casos\n")
-    f.write(f"  Enfermedades con <10 casos: {enfermedades_raras}\n\n")
+    f.write("DISTRIBUCIÓN\n")
+    f.write(f"  Mínimo:                {casos_por_enfermedad.min()} casos\n")
+    f.write(f"  Máximo:                {casos_por_enfermedad.max()} casos\n")
+    f.write(f"  Promedio:              {casos_por_enfermedad.mean():.1f} casos\n")
+    f.write(f"  Enfermedades <10:      {enfermedades_raras}\n\n")
     
-    f.write("ANÁLISIS TEÓRICO VS PRÁCTICO\n")
-    
-    f.write(f"TEÓRICAMENTE:\n")
-    f.write(f"Bits necesarios: log₂({n_enfermedades}) = {np.log2(n_enfermedades):.2f}\n")
-    f.write(f"Redondeado: {bits_necesarios} bits\n")
-    f.write(f"Bits disponibles: {n_features} bits\n")
-    f.write(f"Gap: {n_features - bits_necesarios} bits: Suficiente\n\n")
-    
-    f.write(f"EN PRÁCTICA:\n")
-    f.write(f"  Ratio clases/features: {n_enfermedades}/{n_features} = {ratio_clases_features:.2f}\n\n")
-    
-    f.write(f"Un ratio alto indica dificultad para separar clases:\n")
-    f.write(f"  • Muchas enfermedades deben compartir patrones similares\n")
-    f.write(f"  • Pérdida de información en pipeline (~65% acumulada)\n")
-    f.write(f"  • Desbalanceo: {enfermedades_raras} enfermedades con <10 casos\n\n")
-    
-    f.write(f"  Bits útiles estimados: ~7 bits (vs {bits_necesarios} necesarios)\n\n")
-    
-    f.write("CONCLUSIÓN\n")
-    
-    f.write(f"  El problema consiste en distinguir {n_enfermedades} enfermedades\n")
-    f.write(f"  usando {n_features} bits binarios.\n\n")
-    f.write(f"  Factores que dificultan la clasificación:\n")
-    f.write(f"    • Alto ratio clases/features ({ratio_clases_features:.2f})\n")
-    f.write(f"    • Pérdida de información en pipeline (~65%)\n")
-    f.write(f"    • Desbalanceo: {enfermedades_raras} enfermedades con <10 casos\n")
-    f.write(f"    • Similaridad esperada entre enfermedades\n\n")
-
-print(f"Análisis completado para: {dataset_nombre}")
+    f.write("COMPLEJIDAD\n")
+    f.write(f"  Bits necesarios (log₂): {np.log2(n_enfermedades):.2f} ≈ {bits_necesarios} bits\n")
+    f.write(f"  Bits disponibles:       {n_features} bits\n")
+    f.write(f"  Ratio clases/features:  {ratio_clases_features:.2f}\n")

@@ -1,0 +1,21 @@
+DATASET: MENDELEY - Diagnóstico de Enfermedades
+
+SENSIBILIDAD A CANTIDAD DE PATRONES
+
+CONFIGURACIÓN
+  Train completo:    286
+  Test (fijo):       72
+  Porcentajes:       25%, 50%, 75%, 100%
+
+RESULTADOS
+   Train   Muestras   Prototipos    Accuracy
+  ------  ---------  -----------  ----------
+     25%         71           71      88.89%
+     50%        143          143      91.67%
+     75%        214          214      93.06%
+    100%        286          286      91.67%
+
+RESUMEN
+  Accuracy con 25%:   88.89%
+  Accuracy con 100%:  91.67%
+  Diferencia:         +2.78%

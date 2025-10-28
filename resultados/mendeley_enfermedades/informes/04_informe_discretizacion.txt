@@ -1,0 +1,50 @@
+INFORME: ANÁLISIS DE DISCRETIZACIÓN
+
+CONFIGURACIÓN:
+  n_bins:   3
+  encode:   ordinal
+  strategy: quantile
+
+DATASET:
+  Componentes:  10
+  Muestras:     358
+
+JUSTIFICACIÓN
+
+1. NÚMERO DE BINS (3):
+   • Permite representación binaria con 2 bits:
+     Bin 0 → 00
+     Bin 1 → 01
+     Bin 2 → 10
+
+2. STRATEGY (quantile):
+   • Divide los datos en percentiles
+   • Garantiza balance: ~33.3% de muestras por bin
+   • Evita bins vacíos o desbalanceados
+
+3. ENCODE (ordinal):
+   • Representa bins como números: 0, 1, 2
+   • Mantiene orden: bajo < medio < alto
+
+BALANCE LOGRADO:
+
+Promedio de todas las componentes:
+
+  Bin 0 (bajo):  33.1% (118 muestras)
+  Bin 1 (medio): 33.4% (119 muestras)
+  Bin 2 (alto):  33.5% (119 muestras)
+
+Ideal: 33.33% por bin
+Resultado: Balance excelente.
+
+EJEMPLO: LÍMITES PARA Comp3
+
+  Bin 0 (bajo):  valores ≤ -0.178
+  Bin 1 (medio): valores entre -0.178 y -0.022
+  Bin 2 (alto):  valores > -0.022
+
+RESULTADO:
+
+Transformación exitosa: valores continuos: 3 categorías discretas
+Balance uniforme logrado con strategy='quantile'
+

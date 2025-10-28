@@ -39,7 +39,6 @@ resultados = []
 
 for idx, porcentaje in enumerate(porcentajes):
     n_muestras_train = int(len(X_train_full) * porcentaje)
-    print(f"[{idx+1}/{len(porcentajes)}] Train: {porcentaje*100:.0f}% ({n_muestras_train} muestras)...", end=" ")
     
     if porcentaje < 1.0:
         X_train_sub, _, Y_train_sub, _ = train_test_split(
@@ -79,8 +78,6 @@ for idx, porcentaje in enumerate(porcentajes):
         'total': len(X_test),
         'accuracy': accuracy
     })
-    
-    print(f"Accuracy: {accuracy:.2f}%")
 
 df_resultados = pd.DataFrame(resultados)
 
@@ -136,8 +133,8 @@ with open(f'../resultados/{dataset_id}/metricas/08_sensibilidad_patrones.txt', '
     f.write("SENSIBILIDAD A CANTIDAD DE PATRONES\n\n")
     
     f.write("CONFIGURACIÓN\n")
-    f.write(f"  Train completo:    {len(X_train_full)} muestras\n")
-    f.write(f"  Test (fijo):       {len(X_test)} muestras\n")
+    f.write(f"  Train completo:    {len(X_train_full)}\n")
+    f.write(f"  Test (fijo):       {len(X_test)}\n")
     f.write(f"  Porcentajes:       25%, 50%, 75%, 100%\n\n")
     
     f.write("RESULTADOS\n")
@@ -153,16 +150,10 @@ with open(f'../resultados/{dataset_id}/metricas/08_sensibilidad_patrones.txt', '
         f.write(f"  {porc:5.0f}%  {muestras:9d}  {prototipos:11d}  {accuracy:9.2f}%\n")
     
     mejora = df_resultados.iloc[-1]['accuracy'] - df_resultados.iloc[0]['accuracy']
-    f.write(f"\n  Mejora (25% → 100%): {'+' if mejora >= 0 else ''}{mejora:.2f}%\n\n")
     
-    f.write("CONCLUSIÓN\n")
-    f.write(f"  Con 25% del train: {df_resultados.iloc[0]['accuracy']:.2f}%\n")
-    f.write(f"  Con 100% del train: {df_resultados.iloc[-1]['accuracy']:.2f}%\n\n")
-    
-    if abs(mejora) < 2:
-        f.write(f"  La cantidad de datos tiene poco impacto.\n")
-        f.write(f"  El problema está limitado por separabilidad, no por datos.\n")
-    elif mejora > 0:
-        f.write(f"  Más datos mejoran el accuracy en {mejora:.2f}%.\n")
-    else:
-        f.write(f"  Más datos empeoran el accuracy (posible ruido en train).\n")
+    f.write(f"\nRESUMEN\n")
+    f.write(f"  Accuracy con 25%:   {df_resultados.iloc[0]['accuracy']:.2f}%\n")
+    f.write(f"  Accuracy con 100%:  {df_resultados.iloc[-1]['accuracy']:.2f}%\n")
+    f.write(f"  Diferencia:         {'+' if mejora >= 0 else ''}{mejora:.2f}%\n")
+
+df_resultados.to_csv(f'../resultados/{dataset_id}/metricas/09_sensibilidad_patrones_detalle.csv', index=False)

@@ -8,8 +8,8 @@ DIMENSIONES
   Total muestras:   2564
   Enfermedades:     133
   Features:         20
-  Train:            2051 muestras
-  Test:             513 muestras
+  Train:            2051
+  Test:             513
 
 RESULTADOS
   Accuracy:         24.37%
@@ -17,14 +17,10 @@ RESULTADOS
   Incorrectas:      388/513
 
 ANÁLISIS POR ACCURACY
-  Enfermedades con 0% accuracy:  58/133 (43.6%)
-  Muestras afectadas:            218/513 (42.5%)
-  Accuracy sin esas enfermedades: 42.4%
-
-INTERPRETACIÓN
-  Ratio clases/features: 133/20 = 6.65
-  El bajo accuracy es esperable con este ratio alto.
-  58 enfermedades tienen patrones muy similares (0% accuracy).
+  Enfermedades con 0%:       58/133 (43.6%)
+  Muestras afectadas:        218/513 (42.5%)
+  Accuracy excluyendo 0%:    42.4%
+  Ratio clases/features:     6.65
 
 TOP 10 MEJOR ACCURACY
   migraine disorders                      : 100.0% (1/1)

@@ -21,9 +21,8 @@ RESULTADOS
 
   Degradación total (0% → 30%): -21.05%
 
-CONCLUSIÓN
+RESUMEN
   Accuracy base: 24.37%
   Accuracy con 30% ruido: 3.31%
   Pérdida total: 21.05%
 
-  La red es sensible al ruido (esperado con distancia de Hamming).

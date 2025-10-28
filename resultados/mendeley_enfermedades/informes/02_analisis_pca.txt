@@ -1,31 +1,28 @@
-ANÁLISIS PRE-PCA: Mendeley Dataset
+ MENDELEY INFORME - ANALISIS PCA - SELECCION DE COMPONENTES
 
-DATASET (SILVER01)
-  Features: 74
-  Muestras: 358
-  Clases: 24
+DATASET: (358, 74)
 
-VARIANZA CAPTURADA POR COMPONENTES
+Número de sintomas originales: 74
+Número de muestras/pacientes: 358
+Número de enfermedades diferentes: 24
+
+VARIANZA CAPTURADA:
+
    10 componentes →  66.94%
    15 componentes →  78.45%
    20 componentes →  84.93%
    25 componentes →  88.75%
    30 componentes →  91.73%
    35 componentes →  94.16%
-   40 componentes →  96.10% *
+   40 componentes →  96.10%
    45 componentes →  97.86%
    50 componentes →  99.29%
    60 componentes → 100.00%
    70 componentes → 100.00%
 
-  * Componentes seleccionados
 
-DECISIÓN
-  Componentes seleccionados: 40
-  Varianza capturada: 96.10%
-  Reducción: 74 → 40 features
+INTERPRETACION Y DECISION SOBRE ANALISIS:
+
+- Optamos por quedarnos con 40 componentes (sintomas). Los cuales capturan un 96.10%. Los cuales capturan un 96.10%
+- La reducción es de 74 a 40 componentes.
   Porcentaje reducción: 45.9%
-
-INTERPRETACIÓN
-  Con 40 componentes se retiene el 96.1%
-  de la varianza original, eliminando información redundante.

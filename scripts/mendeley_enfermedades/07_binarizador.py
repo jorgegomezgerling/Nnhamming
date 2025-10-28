@@ -1,12 +1,12 @@
 """
 
-Binarización de datos discretos.
+Binarización de datos discretos. 
 
 """
 
 import pandas as pd
 
-df = pd.read_csv('../../datasets/kaggle_enfermedades/silver/03_discretizado_10comp.csv')
+df = pd.read_csv('../../datasets/mendeley_enfermedades/silver/03_discretizado_10comp.csv')
 
 X = df.drop('prognosis', axis=1)
 Y = df['prognosis']
@@ -42,4 +42,4 @@ df = pd.DataFrame(data)
 
 df['prognosis'] = Y.values
 
-df.to_csv('../../datasets/kaggle_enfermedades/gold/kaggle_dataset.csv', index=False)
+df.to_csv('../../datasets/mendeley_enfermedades/gold/mendeley_dataset.csv', index=False)

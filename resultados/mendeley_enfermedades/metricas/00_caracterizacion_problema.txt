@@ -1,0 +1,18 @@
+DATASET: MENDELEY - Diagnóstico de Enfermedades
+Fuente:  https://data.mendeley.com/datasets/rjgjh8hgrt/6
+
+DIMENSIONES
+  Muestras:              358
+  Enfermedades:          24
+  Features binarias:     20
+
+DISTRIBUCIÓN
+  Mínimo:                10 casos
+  Máximo:                41 casos
+  Promedio:              14.9 casos
+  Enfermedades <10:      0
+
+COMPLEJIDAD
+  Bits necesarios (log₂): 4.58 ≈ 5 bits
+  Bits disponibles:       20 bits
+  Ratio clases/features:  1.20

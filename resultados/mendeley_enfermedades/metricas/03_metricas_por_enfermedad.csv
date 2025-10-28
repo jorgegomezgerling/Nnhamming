@@ -1,0 +1,25 @@
+enfermedad,muestras_test,correctas,accuracy
+AIDS,2,2,100.0
+Fungal Infection,2,2,100.0
+Tuberculosis,2,2,100.0
+Stroke,3,3,100.0
+Rabies,2,2,100.0
+Pneumonia,3,3,100.0
+Malaria,3,3,100.0
+Jaundice,3,3,100.0
+Hepatitis D,2,2,100.0
+Glaucoma,2,2,100.0
+Heart Attack,3,3,100.0
+Epilepsy,2,2,100.0
+Dysentery,5,5,100.0
+Diabetes,5,5,100.0
+Dengue,8,8,100.0
+Dementia,3,3,100.0
+Constipation,2,2,100.0
+Conjunctivitis,4,4,100.0
+Typhoid,3,3,100.0
+Swine Flu,3,2,66.66666666666666
+Cancer,3,2,66.66666666666666
+Arthritis,2,1,50.0
+Sclerosis,2,1,50.0
+Influenza,3,1,33.33333333333333

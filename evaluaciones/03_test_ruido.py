@@ -176,14 +176,9 @@ with open(f'../resultados/{dataset_id}/metricas/06_test_ruido.txt', 'w', encodin
     
     f.write(f"\n  Degradación total (0% → 30%): -{degradacion_total:.2f}%\n\n")
     
-    f.write("CONCLUSIÓN\n")
+    f.write("RESUMEN\n")
     f.write(f"  Accuracy base: {accuracy_base:.2f}%\n")
     f.write(f"  Accuracy con 30% ruido: {accuracy_30:.2f}%\n")
     f.write(f"  Pérdida total: {degradacion_total:.2f}%\n\n")
-    
-    if degradacion_total < 10:
-        f.write(f"  La red muestra robustez razonable ante perturbaciones.\n")
-    else:
-        f.write(f"  La red es sensible al ruido (esperado con distancia de Hamming).\n")
 
 df_resultados.to_csv(f'../resultados/{dataset_id}/metricas/07_test_ruido_detalle.csv', index=False)

@@ -1,9 +1,7 @@
 """
-
-Evaluación: Matriz de Confusión:
+Evaluación: Matriz de Confusión
 Evalúa el rendimiento de la Red de Hamming usando train/test split.
 Genera matriz de confusión, métricas y visualizaciones.
-
 """
 
 import pandas as pd
@@ -71,7 +69,6 @@ metricas_por_enf = []
 for i, enf in enumerate(enfermedades):
     tp = matriz[i, i]
     total_real = matriz[i, :].sum()
-    total_pred = matriz[:, i].sum()
     
     acc_enf = tp / total_real if total_real > 0 else 0
     
@@ -110,8 +107,8 @@ with open(f'../resultados/{dataset_id}/metricas/02_metricas_confusion.txt', 'w',
     f.write(f"  Total muestras:   {len(df)}\n")
     f.write(f"  Enfermedades:     {n_enfermedades}\n")
     f.write(f"  Features:         {n_features}\n")
-    f.write(f"  Train:            {len(X_train)} muestras\n")
-    f.write(f"  Test:             {len(X_test)} muestras\n\n")
+    f.write(f"  Train:            {len(X_train)}\n")
+    f.write(f"  Test:             {len(X_test)}\n\n")
     
     f.write("RESULTADOS\n")
     f.write(f"  Accuracy:         {accuracy*100:.2f}%\n")
@@ -119,14 +116,10 @@ with open(f'../resultados/{dataset_id}/metricas/02_metricas_confusion.txt', 'w',
     f.write(f"  Incorrectas:      {incorrectas}/{len(y_real)}\n\n")
     
     f.write("ANÁLISIS POR ACCURACY\n")
-    f.write(f"  Enfermedades con 0% accuracy:  {n_enf_cero}/{n_enfermedades} ({n_enf_cero/n_enfermedades*100:.1f}%)\n")
-    f.write(f"  Muestras afectadas:            {int(muestras_cero)}/{len(Y_test)} ({muestras_cero/len(Y_test)*100:.1f}%)\n")
-    f.write(f"  Accuracy sin esas enfermedades: {accuracy_sin_ceros:.1f}%\n\n")
-    
-    f.write("INTERPRETACIÓN\n")
-    f.write(f"  Ratio clases/features: {n_enfermedades}/{n_features} = {n_enfermedades/n_features:.2f}\n")
-    f.write(f"  El bajo accuracy es esperable con este ratio alto.\n")
-    f.write(f"  {n_enf_cero} enfermedades tienen patrones muy similares (0% accuracy).\n\n")
+    f.write(f"  Enfermedades con 0%:       {n_enf_cero}/{n_enfermedades} ({n_enf_cero/n_enfermedades*100:.1f}%)\n")
+    f.write(f"  Muestras afectadas:        {int(muestras_cero)}/{len(Y_test)} ({muestras_cero/len(Y_test)*100:.1f}%)\n")
+    f.write(f"  Accuracy excluyendo 0%:    {accuracy_sin_ceros:.1f}%\n")
+    f.write(f"  Ratio clases/features:     {n_enfermedades/n_features:.2f}\n\n")
     
     f.write("TOP 10 MEJOR ACCURACY\n")
     for i, row in df_metricas.head(10).iterrows():
@@ -192,9 +185,10 @@ ax2.set_title('Distribución de Accuracy', fontweight='bold', fontsize=11)
 ax2.legend()
 ax2.grid(True, alpha=0.3, axis='y')
 
-ax2.text(5, ax2.get_ylim()[1]*0.85, f'{n_enf_cero} enfermedades\ncon 0% accuracy',
-         bbox=dict(boxstyle='round', facecolor='lightcoral', alpha=0.7),
-         fontsize=10, fontweight='bold')
+if n_enf_cero > 0:
+    ax2.text(5, ax2.get_ylim()[1]*0.85, f'{n_enf_cero} enfermedades\ncon 0% accuracy',
+             bbox=dict(boxstyle='round', facecolor='lightcoral', alpha=0.7),
+             fontsize=10, fontweight='bold')
 
 plt.suptitle(f'{dataset_nombre} | Análisis de Accuracy', fontsize=14, fontweight='bold')
 plt.tight_layout(rect=[0, 0, 1, 0.96])

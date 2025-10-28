@@ -43,10 +43,7 @@ red.fit_from_df(train_df)
 epsilon_factors = [0.1, 0.5, 1.0, 2.0, 5.0, 10.0]
 resultados = []
 
-print(f"\nEvaluando {len(epsilon_factors)} valores de epsilon en {len(X_test)} muestras...\n")
-
 for idx, epsilon_factor in enumerate(epsilon_factors):
-    print(f"[{idx+1}/{len(epsilon_factors)}] Epsilon factor: {epsilon_factor}...", end=" ")
     
     aciertos = 0
     total_iteraciones = 0
@@ -74,8 +71,6 @@ for idx, epsilon_factor in enumerate(epsilon_factors):
         'accuracy': accuracy,
         'promedio_iteraciones': promedio_iteraciones
     })
-    
-    print(f"Accuracy: {accuracy:.2f}%")
 
 df_resultados = pd.DataFrame(resultados)
 
@@ -103,7 +98,6 @@ ax1.set_ylabel('Accuracy (%)', fontsize=11, fontweight='bold')
 ax1.set_title('Accuracy vs Factor de Inhibición', fontweight='bold', fontsize=12)
 ax1.legend(fontsize=9)
 ax1.grid(True, alpha=0.3, linestyle='--')
-# ax1.set_xscale('log')
 
 ax2.plot(df_resultados['epsilon_factor'], df_resultados['promedio_iteraciones'], 
          marker='s', linewidth=2.5, markersize=10, color='crimson', label='Iteraciones')
@@ -120,7 +114,6 @@ ax2.set_ylabel('Iteraciones Promedio', fontsize=11, fontweight='bold')
 ax2.set_title('Convergencia vs Factor de Inhibición', fontweight='bold', fontsize=12)
 ax2.legend(fontsize=9)
 ax2.grid(True, alpha=0.3, linestyle='--')
-# ax2.set_xscale('log')
 
 plt.suptitle(f'{dataset_nombre} | Sensibilidad Epsilon | Test: {len(X_test)} muestras', 
              fontsize=14, fontweight='bold')
@@ -128,16 +121,17 @@ plt.tight_layout(rect=[0, 0, 1, 0.96])
 plt.savefig(f'../resultados/{dataset_id}/graficos/10_sensibilidad_epsilon.png', dpi=200, bbox_inches='tight')
 plt.close()
 
-with open(f'../resultados/{dataset_id}/metricas/09_sensibilidad_epsilon.txt', 'w', encoding='utf-8') as f:
+with open(f'../resultados/{dataset_id}/metricas/10_sensibilidad_epsilon.txt', 'w', encoding='utf-8') as f:
     f.write(f"DATASET: {dataset_nombre}\n\n")
     
     f.write("SENSIBILIDAD DEL PARÁMETRO EPSILON\n\n")
     
     f.write("CONFIGURACIÓN\n")
-    f.write(f"  Train:             {len(X_train)} muestras\n")
-    f.write(f"  Test:              {len(X_test)} muestras\n")
+    f.write(f"  Train:             {len(X_train)}\n")
+    f.write(f"  Test:              {len(X_test)}\n")
     f.write(f"  Prototipos:        {len(red.prototipos)}\n")
-    f.write(f"  Epsilon factors:   {epsilon_factors}\n\n")
+    f.write(f"  Epsilon factors:   {epsilon_factors}\n")
+    f.write(f"  Fórmula:           ε = factor / (M + 1), M = prototipos\n\n")
     
     f.write("RESULTADOS\n")
     f.write(f"  {'ε factor':>9s}  {'ε real':>10s}  {'Accuracy':>10s}  {'Iter. prom.':>12s}\n")
@@ -154,19 +148,9 @@ with open(f'../resultados/{dataset_id}/metricas/09_sensibilidad_epsilon.txt', 'w
     
     f.write(f"\n  * Mejor accuracy\n\n")
     
-    f.write("INTERPRETACIÓN\n")
-    f.write(f"  EPSILON = epsilon_factor / (M + 1)\n")
-    f.write(f"  Donde M = {len(red.prototipos)} prototipos\n\n")
-    
-    f.write(f"  REGIÓN ESTABLE (ε ≤ 1.0):\n")
-    f.write(f"    Accuracy constante, competencia equilibrada\n\n")
-    
-    f.write(f"  REGIÓN DE COLAPSO (ε ≥ 2.0):\n")
-    f.write(f"    Accuracy <2%, inhibición excesiva\n\n")
-    
-    f.write("CONCLUSIÓN\n")
-    f.write(f"  Punto de quiebre crítico entre ε = 1.0 y ε = 2.0.\n")
-    f.write(f"  El valor por defecto (ε = 1.0) es óptimo.\n")
-    f.write(f"  Las 20 iteraciones son suficientes.\n")
+    f.write("RESUMEN\n")
+    f.write(f"  Mejor ε factor:         {mejor['epsilon_factor']:.1f}\n")
+    f.write(f"  Accuracy máximo:        {mejor['accuracy']:.2f}%\n")
+    f.write(f"  Iteraciones promedio:   {mejor['promedio_iteraciones']:.1f}\n")
 
-df_resultados.to_csv(f'../resultados/{dataset_id}/metricas/10_sensibilidad_epsilon_detalle.csv', index=False)
+df_resultados.to_csv(f'../resultados/{dataset_id}/metricas/11_sensibilidad_epsilon_detalle.csv', index=False)

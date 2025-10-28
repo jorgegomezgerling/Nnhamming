@@ -1,0 +1,70 @@
+
+INFORME: ANÁLISIS DE BINARIZACIÓN
+
+DATASET: MENDELEY - Diagnóstico de Enfermedades
+
+TRANSFORMACIÓN:
+  Input:   10 componentes discretas (valores: 0, 1, 2)
+  Output:  20 features binarias (valores: 0, 1)
+  Muestras: 358
+
+CODIFICACIÓN UTILIZADA
+
+   Valor discreto  →  Bits binarios
+   ────────────────────────────────
+        0 (bajo)   →      1  0
+        1 (medio)  →      1  1
+        2 (alto)   →      0  1
+
+JUSTIFICACIÓN:
+    Compatible con Red de Hamming
+
+VERIFICACIÓN
+
+  Dataset discretizado: (358, 11)
+  Dataset binarizado:   (358, 21)
+  
+  Cálculo: 10 componentes × 2 bits = 20 features ✓
+
+
+BALANCE DE BITS
+
+  Total de bits: 7,160
+  
+  Distribución:
+    Ceros (0): 2,383 bits (33.3%)
+    Unos  (1): 4,777 bits (66.7%)
+  
+  NOTA: El desbalance (más unos que ceros) es esperado debido a la
+        codificación elegida. El valor 1 genera dos unos (11), mientras
+        que los valores 0 y 2 generan un uno y un cero cada uno.
+
+
+EJEMPLO DE TRANSFORMACIÓN
+
+Paciente #0 - Enfermedad: Fungal Infection
+
+  Componente    Discreto  →  Binario
+  ──────────────────────────────────
+  Comp3           2      →    0 1
+  Comp2           1      →    1 1
+  Comp1           1      →    1 1
+  Comp4           0      →    1 0
+  Comp5           0      →    1 0
+  Comp9           0      →    1 0
+  Comp12          2      →    0 1
+  Comp6           2      →    0 1
+  Comp7           2      →    0 1
+  Comp10          0      →    1 0
+
+
+
+PIPELINE COMPLETO
+
+  1. Limpieza:         172 features    → 74 features (filtrado)
+  2. PCA:              74 features     → 40 componentes (96.1% varianza)
+  3. Mutual Info:      40 componentes  → 10 componentes (top MI)
+  4. Discretización:   Continuos       → 3 valores discretos (0,1,2)
+  5. Binarización:     3 discretos     → 20 bits binarios
+
+RESULTADO: 172 features originales → 20 features binarias

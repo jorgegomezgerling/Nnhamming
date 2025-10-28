@@ -21,10 +21,8 @@ RESULTADOS POR K
 
   * Mejor K: 10
 
-INTERPRETACIÓN
+RESUMEN
   Baseline (K=1): 24.37%
   Mejor (K=10): 69.20%
   Mejora: +44.83%
 
-  La respuesta correcta está entre los 10 candidatos
-  más cercanos en 69.2% de los casos.

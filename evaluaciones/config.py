@@ -10,7 +10,7 @@ Permite cambiar entre datasets modificando una sola variable
 
 
 # Cambiar esta variable para alternar entre datasets
-DATASET_ACTIVO = "enfermedades"  # Opciones: "enfermedades" | "disease_symptom"
+DATASET_ACTIVO = "mendeley_enfermedades"  # Opciones: "enfermedades" | "mendeley_enfermedades"
 
 # ============================================================
 # DEFINICIÓN DE DATASETS
@@ -29,15 +29,15 @@ DATASETS = {
         "fuente": "https://www.kaggle.com/datasets/shobhit043/diseases-and-their-symptoms",
     },
     
-    "disease_symptom": {
+    "mendeley_enfermedades": {
         "id": "mendeley_enfermedades",
         "nombre": "MENDELEY - Diagnóstico de Enfermedades",
         "descripcion": "Dataset de 25 enfermedades con 20 síntomas tras preprocesamiento",
-        "path": "../datasets/mendeley_enfermedades/gold/dataset.csv",
+        "path": "../datasets/mendeley_enfermedades/gold/mendeley_dataset.csv",
         "target": "prognosis",
-        "n_clases": 25, # ESTO ES A LO APUNTADO. DESPUES DEL PREPROCESAMIENTO GOLD
+        "n_clases": 24,
         "n_features": 20,
-        "n_muestras": 550,
+        "n_muestras": 358,
         "fuente": "https://data.mendeley.com/datasets/rjgjh8hgrt/6"
     }
 }

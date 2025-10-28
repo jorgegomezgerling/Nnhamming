@@ -11,13 +11,6 @@ ELIMINACIÓN DE COLUMNAS INVÁLIDAS
   Features originales: 171
   Columnas inválidas eliminadas: 97
 
-ELIMINACIÓN DE DUPLICADOS
-  Columnas duplicadas eliminadas: 3
-  Nombres duplicados: ['Joint_Pain']
-
-ELIMINACIÓN CLASE 'NONE'
-  Casos eliminados: 19
-
 FILTRADO CLASES RARAS (<10 casos)
   Clases eliminadas: 59
   Muestras eliminadas: 380

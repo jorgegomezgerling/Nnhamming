@@ -1,4 +1,4 @@
-Informe: Análisis para PCA - SELECCION DE SINTOMAS
+ KAGGLE INFORME - ANALISIS PCA - SELECCION DE COMPONENTES
 
 DATASET: (2564, 400)
 
@@ -8,25 +8,25 @@ Número de enfermedades diferentes: 133
 
 VARIANZA CAPTURADA:
 
-   10 componentes →  18.56%
-   15 componentes →  24.19%
-   20 componentes →  29.06%
-   25 componentes →  33.45%
-   30 componentes →  37.42%
-   40 componentes →  44.12%
-   50 componentes →  49.90%
-   60 componentes →  55.08%
-   70 componentes →  59.58%
-   80 componentes →  63.71%
-   90 componentes →  67.25%
-  100 componentes →  70.47%
-  150 componentes →  82.23%
-  200 componentes →  89.48%
+   10 componentes →  18.55%
+   15 componentes →  24.20%
+   20 componentes →  29.05%
+   25 componentes →  33.48%
+   30 componentes →  37.44%
+   40 componentes →  44.11%
+   50 componentes →  49.93%
+   60 componentes →  55.01%
+   70 componentes →  59.65%
+   80 componentes →  63.68%
+   90 componentes →  67.24%
+  100 componentes →  70.44%
+  150 componentes →  82.22%
+  200 componentes →  89.50%
   300 componentes →  97.06%
   400 componentes → 100.00%
 
 
 INTERPRETACION Y DECISION SOBRE ANALISIS:
 
-- Optamos por quedarnos con 100 componentes (síntomas). Los cuales capturan un 70.47%
+- Optamos por quedarnos con 100 componentes (síntomas). Los cuales capturan un 70.44%
 - La reducción es de 400 a 100 componentes. Un 75% menos.

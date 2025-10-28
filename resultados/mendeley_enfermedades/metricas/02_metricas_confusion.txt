@@ -1,0 +1,47 @@
+DATASET: MENDELEY - Diagnóstico de Enfermedades
+
+CONFIGURACIÓN
+  Train/Test split: 80/20 (stratified)
+  K (predicción):   1
+
+DIMENSIONES
+  Total muestras:   358
+  Enfermedades:     24
+  Features:         20
+  Train:            286
+  Test:             72
+
+RESULTADOS
+  Accuracy:         91.67%
+  Correctas:        66/72
+  Incorrectas:      6/72
+
+ANÁLISIS POR ACCURACY
+  Enfermedades con 0%:       0/24 (0.0%)
+  Muestras afectadas:        0/72 (0.0%)
+  Accuracy excluyendo 0%:    91.7%
+  Ratio clases/features:     1.20
+
+TOP 10 MEJOR ACCURACY
+  AIDS                                    : 100.0% (2/2)
+  Fungal Infection                        : 100.0% (2/2)
+  Tuberculosis                            : 100.0% (2/2)
+  Stroke                                  : 100.0% (3/3)
+  Rabies                                  : 100.0% (2/2)
+  Pneumonia                               : 100.0% (3/3)
+  Malaria                                 : 100.0% (3/3)
+  Jaundice                                : 100.0% (3/3)
+  Hepatitis D                             : 100.0% (2/2)
+  Glaucoma                                : 100.0% (2/2)
+
+TOP 10 PEOR ACCURACY
+  Dengue                                  : 100.0% (8/8)
+  Dementia                                : 100.0% (3/3)
+  Constipation                            : 100.0% (2/2)
+  Conjunctivitis                          : 100.0% (4/4)
+  Typhoid                                 : 100.0% (3/3)
+  Swine Flu                               :  66.7% (2/3)
+  Cancer                                  :  66.7% (2/3)
+  Arthritis                               :  50.0% (1/2)
+  Sclerosis                               :  50.0% (1/2)
+  Influenza                               :  33.3% (1/3)

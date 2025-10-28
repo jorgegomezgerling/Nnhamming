@@ -3,8 +3,8 @@ DATASET: KAGGLE - Diagnóstico de Enfermedades
 SENSIBILIDAD A CANTIDAD DE PATRONES
 
 CONFIGURACIÓN
-  Train completo:    2051 muestras
-  Test (fijo):       513 muestras
+  Train completo:    2051
+  Test (fijo):       513
   Porcentajes:       25%, 50%, 75%, 100%
 
 RESULTADOS
@@ -15,10 +15,7 @@ RESULTADOS
      75%       1538         1538      26.51%
     100%       2051         2051      24.37%
 
-  Mejora (25% → 100%): +4.09%
-
-CONCLUSIÓN
-  Con 25% del train: 20.27%
-  Con 100% del train: 24.37%
-
-  Más datos mejoran el accuracy en 4.09%.
+RESUMEN
+  Accuracy con 25%:   20.27%
+  Accuracy con 100%:  24.37%
+  Diferencia:         +4.09%

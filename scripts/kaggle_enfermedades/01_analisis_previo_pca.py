@@ -52,7 +52,7 @@ plt.xticks(range(len(df_resultados)),
            rotation=45)
 plt.xlabel('Número de componentes', fontsize=12)
 plt.ylabel('Varianza capturada (%)', fontsize=12)
-plt.title('Análisis PCA: Selección de Número de Componentes', 
+plt.title('KAGGLE | Análisis PCA: Selección de Componentes', 
           fontsize=14, fontweight='bold')
 plt.grid(True, alpha=0.3, axis='y')
 plt.ylim(0, 105)
@@ -62,7 +62,7 @@ plt.savefig('../../resultados/kaggle_enfermedades/graficos/01_pca_varianza_barra
 
 # INFORME: 
 
-informe = f"""Informe: Análisis para PCA - SELECCION DE SINTOMAS
+informe = f""" KAGGLE INFORME - ANALISIS PCA - SELECCION DE COMPONENTES
 
 DATASET: {X.shape}
 

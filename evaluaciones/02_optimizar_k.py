@@ -152,11 +152,9 @@ with open(f'../resultados/{dataset_id}/metricas/04_optimizacion_k.txt', 'w', enc
     
     f.write(f"\n  * Mejor K: {int(mejor_k['k'])}\n\n")
     
-    f.write("INTERPRETACIÓN\n")
+    f.write("RESUMEN\n")
     f.write(f"  Baseline (K=1): {accuracy_k1:.2f}%\n")
     f.write(f"  Mejor (K={int(mejor_k['k'])}): {mejor_k['accuracy']:.2f}%\n")
     f.write(f"  Mejora: +{mejor_k['accuracy'] - accuracy_k1:.2f}%\n\n")
-    f.write(f"  La respuesta correcta está entre los {int(mejor_k['k'])} candidatos\n")
-    f.write(f"  más cercanos en {mejor_k['accuracy']:.1f}% de los casos.\n")
     
 df_resultados.to_csv(f'../resultados/{dataset_id}/metricas/05_optimizacion_k_detalle.csv', index=False)
