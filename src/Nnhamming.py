@@ -97,11 +97,7 @@ class Nnhamming:
 
             if sum(a > 0 for a in activaciones) == 1:
                 break
-        
-        # # Verificar si todos los candidatos fueron eliminados
-        # activos = sum(a > 0 for a in activaciones)
-        # if activos == 0 and epsilon_factor >= 2.0:  #Solo alertar con epsilon alto
-        #     print(f"WARNING: Epsilon {epsilon:.6f} (factor={epsilon_factor}) eliminó todos los candidatos")
+    
 
         indices_ordenados = sorted(range(M), key=lambda i: activaciones[i], reverse=True)
         k = min(k, len(indices_ordenados))

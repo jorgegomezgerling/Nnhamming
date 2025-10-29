@@ -10,14 +10,10 @@ Permite cambiar entre datasets modificando una sola variable
 
 
 # Cambiar esta variable para alternar entre datasets
-DATASET_ACTIVO = "mendeley_enfermedades"  # Opciones: "enfermedades" | "mendeley_enfermedades"
-
-# ============================================================
-# DEFINICIÓN DE DATASETS
-# ============================================================
+DATASET_ACTIVO = "mendeley_enfermedades"  # Opciones: "kaggle_enfermedades" | "mendeley_enfermedades"
 
 DATASETS = {
-    "enfermedades": {
+    "kaggle_enfermedades": {
         "id": "kaggle_enfermedades",
         "nombre": "KAGGLE - Diagnóstico de Enfermedades",
         "descripcion": "Dataset de 133 enfermedades con 20 síntomas binarios",
@@ -92,10 +88,6 @@ def print_dataset_info():
     print(f"  Clases:     {config['n_clases']}")
     print(f"  Features:   {config['n_features']}")
     print(f"  Muestras:   {config['n_muestras']}")
-
-# ============================================================
-# EJECUCIÓN DIRECTA (para testing)
-# ============================================================
 
 if __name__ == "__main__":
     print("\n🔹 DATASET 1:")
