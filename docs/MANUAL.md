@@ -239,9 +239,9 @@ RESULTADOS
 Enfermedad real: Diabetes
 
 Top 3 predicciones:
-1. [CORRECTO] Diabetes                       (distancia: 0)
-2. [INCORRECTO] Dengue                       (distancia: 8)
-3. [INCORRECTO] Malaria                      (distancia: 9)
+1. [CORRECTO] Diabetes                       (confianza: 1.00)
+2. [INCORRECTO] Dengue                       (confianza: 0.60)
+3. [INCORRECTO] Malaria                      (confianza: 0.55)
 
 ```
 
