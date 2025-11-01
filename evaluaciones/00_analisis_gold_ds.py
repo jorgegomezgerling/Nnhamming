@@ -30,6 +30,9 @@ casos_por_enfermedad = Y.value_counts()
 enfermedades_raras = (casos_por_enfermedad < 10).sum()
 
 ratio_clases_features = n_enfermedades / n_features
+
+# Calcula bits necesarios: log2 redondea hacia arriba
+# Ej: 10 enfermedades → log2(10)=3.32 → ceil=4 bits
 bits_necesarios = int(np.ceil(np.log2(n_enfermedades)))
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))

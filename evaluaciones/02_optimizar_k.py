@@ -42,24 +42,28 @@ train_df[config['target']] = Y_train.values
 red = Nnhamming()
 red.fit_from_df(train_df)
 
+# Recolectamos top 10 predicciones para cada muestra de test
 k_max = 10
-y_real = []
-predicciones_por_muestra = []
+y_real = []  # Diagnósticos reales
+predicciones_por_muestra = []  # Top 10 para cada paciente
 
 for i in range(len(X_test)):
     vector = X_test.iloc[i].values.tolist()
     real = Y_test.iloc[i]
     
+    # Obtenemos top 10 diagnósticos (una sola vez por eficiencia)
     predicciones = red.predict(vector, k=k_max)
-    top_k = [pred[0] for pred in predicciones]
+    top_k = [pred[0] for pred in predicciones]  # Solo nombres, sin confianza
     
     y_real.append(real)
     predicciones_por_muestra.append(top_k)
 
+# Evaluamos accuracy para diferentes valores de K
 k_values = [1, 2, 3, 4, 5, 7, 10]
 resultados = []
 
 for k in k_values:
+    # Contamos: si el real está en el top K
     aciertos = sum(real in preds[:k] for real, preds in zip(y_real, predicciones_por_muestra))
     accuracy = aciertos / len(y_real) * 100
     
@@ -72,6 +76,7 @@ for k in k_values:
 
 df_resultados = pd.DataFrame(resultados)
 
+# Identificamos el mejor K y el baseline (K=1)
 mejor_k = df_resultados.loc[df_resultados['accuracy'].idxmax()]
 accuracy_k1 = df_resultados[df_resultados['k'] == 1]['accuracy'].values[0]
 

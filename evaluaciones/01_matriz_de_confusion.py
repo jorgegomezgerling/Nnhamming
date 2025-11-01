@@ -29,7 +29,10 @@ X = df.drop(config['target'], axis=1)
 Y = df[config['target']]
 
 n_enfermedades = Y.nunique()
+# shape[1] columnas, shape[0] filas.
 n_features = X.shape[1]
+
+# Primero creamos conjuntos separados:
 
 X_train, X_test, Y_train, Y_test = train_test_split(
     X, Y,
@@ -38,39 +41,56 @@ X_train, X_test, Y_train, Y_test = train_test_split(
     random_state=42
 )
 
+# Creamos una copia de X_train para agregarle los values de Y_train (la red espera sintomas + prognosis)
 train_df = X_train.copy()
 train_df[config['target']] = Y_train.values
 
+# Instanciamos nuestra red y la entrenamos con el 80% de los datos
 red = Nnhamming()
-red.fit_from_df(train_df)
+red.fit_from_df(train_df)  # La red guarda estos datos en memoria
 
-y_real = []
-y_pred = []
+y_real = []  # Diagnósticos verdaderos del test (20%)
+y_pred = []  # Diagnósticos que la red predice
 
+# Evaluamos con el 20% restante que la red NUNCA vio
 for i in range(len(X_test)):
-    vector = X_test.iloc[i].values.tolist()
-    real = Y_test.iloc[i]
+    # Tomamos un paciente del test
+    vector = X_test.iloc[i].values.tolist()  # Ej: [1, 0, 1]
+    real = Y_test.iloc[i]                     # Ej: "Gastroenteritis"
     
+    # Le preguntamos a la red qué opina de este paciente NUEVO
+    # La red compara con los prototipos que guardó del train
     prediccion = red.predict(vector, k=1)
-    predicho = prediccion[0][0]
+    predicho = prediccion[0][0]  # Extraemos solo el nombre
     
-    y_real.append(real)
-    y_pred.append(predicho)
+    # Guardamos ambos para comparar después
+    y_real.append(real)      # Lo que DEBERÍA ser
+    y_pred.append(predicho)  # Lo que la red CREE que es
 
+# Comparamos: Cuántas veces la red acertó con datos que nunca vio?
 matriz = confusion_matrix(y_real, y_pred)
 accuracy = accuracy_score(y_real, y_pred)
 
+# Contamos cuántas predicciones fueron correctas
+# Comparamos elemento por elemento: True=1, False=0
 correctas = (np.array(y_real) == np.array(y_pred)).sum()
+# Ejemplo: [True, True, False, True].sum() = 3
+
+# Las incorrectas son simplemente el total menos las correctas
 incorrectas = len(y_real) - correctas
 
+# Obtenemos lista ÚNICA de enfermedades, ordenada alfabéticamente
 enfermedades = sorted(Y.unique())
+# Ejemplo: ['Alergia', 'Covid', 'Gastroenteritis', 'Gripe']
+
+# Lista vacía donde guardaremos métricas de CADA enfermedad
 metricas_por_enf = []
 
+# Calculamos métricas por cada enfermedad individual
 for i, enf in enumerate(enfermedades):
-    tp = matriz[i, i]
-    total_real = matriz[i, :].sum()
-    
-    acc_enf = tp / total_real if total_real > 0 else 0
+    tp = matriz[i, i]                    # True Positives (diagonal)
+    total_real = matriz[i, :].sum()      # Total real en test
+    acc_enf = tp / total_real if total_real > 0 else 0  # Accuracy individual
     
     metricas_por_enf.append({
         'enfermedad': enf,
@@ -79,18 +99,23 @@ for i, enf in enumerate(enfermedades):
         'accuracy': acc_enf * 100
     })
 
+# DataFrame ordenado por accuracy (mejor a peor)
 df_metricas = pd.DataFrame(metricas_por_enf).sort_values('accuracy', ascending=False)
 
+# Identificamos enfermedades con 0% accuracy (problemáticas)
 enf_cero = df_metricas[df_metricas['accuracy'] == 0]
 n_enf_cero = len(enf_cero)
 muestras_cero = enf_cero['muestras_test'].sum()
 
+# Filtramos enfermedades detectables (accuracy > 0)
 enf_no_cero = df_metricas[df_metricas['accuracy'] > 0]
 muestras_no_cero = enf_no_cero['muestras_test'].sum()
 correctas_no_cero = enf_no_cero.apply(lambda row: int(row['correctas']), axis=1).sum()
 
+# Accuracy excluyendo enfermedades no detectables
 accuracy_sin_ceros = correctas_no_cero / muestras_no_cero * 100 if muestras_no_cero > 0 else 0
 
+# Matriz de confusión como DataFrame
 matriz_df = pd.DataFrame(matriz, index=enfermedades, columns=enfermedades)
 matriz_df.to_csv(f'../resultados/{dataset_id}/metricas/01_matriz_confusion_completa.csv')
 
