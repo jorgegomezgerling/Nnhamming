@@ -187,35 +187,38 @@ plt.tight_layout()
 plt.savefig(f'../resultados/{dataset_id}/graficos/05_matriz_confusion_top20.png', dpi=200, bbox_inches='tight')
 plt.close()
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(16, 6))
+fig, ax = plt.subplots(figsize=(12, 7))
 
-top20 = df_metricas.head(20)
-ax1.barh(range(len(top20)), top20['accuracy'], color='green', alpha=0.7, edgecolor='black')
-ax1.set_yticks(range(len(top20)))
-ax1.set_yticklabels([enf[:35] for enf in top20['enfermedad']], fontsize=8)
-ax1.set_xlabel('Accuracy (%)', fontsize=10)
-ax1.set_title('Top 20: Enfermedades con Mejor Accuracy', fontweight='bold', fontsize=11)
-ax1.invert_yaxis()
-ax1.grid(True, alpha=0.3, axis='x')
-ax1.axvline(x=accuracy*100, color='red', linestyle='--', linewidth=2, alpha=0.7, 
-            label=f'Promedio: {accuracy*100:.1f}%')
-ax1.legend()
+# Histograma simple, todo en steelblue
+ax.hist(df_metricas['accuracy'], bins=25, edgecolor='black', alpha=0.7, color='steelblue')
 
-ax2.hist(df_metricas['accuracy'], bins=20, edgecolor='black', alpha=0.7, color='steelblue')
-ax2.axvline(x=accuracy*100, color='red', linestyle='--', linewidth=2, 
-            label=f'Promedio: {accuracy*100:.1f}%')
-ax2.set_xlabel('Accuracy (%)', fontsize=10)
-ax2.set_ylabel('Número de enfermedades', fontsize=10)
-ax2.set_title('Distribución de Accuracy', fontweight='bold', fontsize=11)
-ax2.legend()
-ax2.grid(True, alpha=0.3, axis='y')
+# Solo la línea verde del promedio excluyendo 0%
+ax.axvline(x=accuracy_sin_ceros, color='green', linestyle='--', linewidth=2.5,
+           label=f'Promedio excluyendo 0%: {accuracy_sin_ceros:.1f}%')
 
+# Texto "42.5%" junto a la línea verde
+ax.text(accuracy_sin_ceros + 2, ax.get_ylim()[1] * 0.95, f'{accuracy_sin_ceros:.1f}%',
+        fontsize=14, fontweight='bold', color='green',
+        bbox=dict(boxstyle='round,pad=0.4', facecolor='white', edgecolor='green', linewidth=2))
+
+ax.set_xlabel('Accuracy (%)', fontsize=12, fontweight='bold')
+ax.set_ylabel('Número de enfermedades', fontsize=12, fontweight='bold')
+ax.set_title(f'{dataset_nombre} | Distribución de Accuracy por Enfermedad\n' +
+             f'Test: {len(X_test)} muestras | {n_enfermedades} enfermedades',
+             fontweight='bold', fontsize=13)
+ax.legend(fontsize=11, loc='upper right')
+ax.grid(True, alpha=0.3, axis='y')
+
+# Anotación para enfermedades con 0%
 if n_enf_cero > 0:
-    ax2.text(5, ax2.get_ylim()[1]*0.85, f'{n_enf_cero} enfermedades\ncon 0% accuracy',
-             bbox=dict(boxstyle='round', facecolor='lightcoral', alpha=0.7),
-             fontsize=10, fontweight='bold')
+    ax.text(2, ax.get_ylim()[1] * 0.75,
+            f'{n_enf_cero} enfermedades (0% accuracy)\n'
+            f'{int(muestras_cero)} muestras afectadas\n'
+            f'({muestras_cero/len(Y_test)*100:.1f}% del test)',
+            bbox=dict(boxstyle='round,pad=0.8', facecolor='lightcoral', alpha=0.8, 
+                     edgecolor='darkred', linewidth=2),
+            fontsize=11, fontweight='bold')
 
-plt.suptitle(f'{dataset_nombre} | Análisis de Accuracy', fontsize=14, fontweight='bold')
-plt.tight_layout(rect=[0, 0, 1, 0.96])
-plt.savefig(f'../resultados/{dataset_id}/graficos/06_accuracy_por_enfermedad.png', dpi=200, bbox_inches='tight')
+plt.tight_layout()
+plt.savefig(f'../resultados/{dataset_id}/graficos/06_distribucion_accuracy.png', dpi=200, bbox_inches='tight')
 plt.close()

@@ -6,9 +6,7 @@ df = pd.read_csv('../datasets/kaggle_enfermedades/bronze/kaggle_dataset.csv')
 # Contar casos por enfermedad
 distribucion = df['prognosis'].value_counts().sort_values()
 
-print("="*70)
 print("DISTRIBUCIÓN DE CASOS - DATASET ORIGINAL KAGGLE (BRONZE)")
-print("="*70)
 
 print(f"\nTotal de enfermedades: {len(distribucion)}")
 print(f"Total de muestras: {len(df)}")

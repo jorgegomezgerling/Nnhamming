@@ -10,7 +10,7 @@ Permite cambiar entre datasets modificando una sola variable
 
 
 # Cambiar esta variable para alternar entre datasets
-DATASET_ACTIVO = "kaggle_enfermedades"  # Opciones: "kaggle_enfermedades" | "mendeley_enfermedades"
+DATASET_ACTIVO = "mendeley_enfermedades"  # Opciones: "kaggle_enfermedades" | "mendeley_enfermedades"
 
 DATASETS = {
     "kaggle_enfermedades": {

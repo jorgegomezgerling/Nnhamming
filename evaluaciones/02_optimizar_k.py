@@ -79,54 +79,48 @@ df_resultados = pd.DataFrame(resultados)
 # Identificamos el mejor K y el baseline (K=1)
 mejor_k = df_resultados.loc[df_resultados['accuracy'].idxmax()]
 accuracy_k1 = df_resultados[df_resultados['k'] == 1]['accuracy'].values[0]
+mejora_total = mejor_k['accuracy'] - accuracy_k1
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+# Crear figura con un solo gráfico más grande
+fig, ax = plt.subplots(figsize=(12, 6))
 
-ax1.plot(df_resultados['k'], df_resultados['accuracy'], 
-         marker='o', linewidth=2.5, markersize=10, color='steelblue', label='Accuracy')
-ax1.fill_between(df_resultados['k'], df_resultados['accuracy'], 
-                  alpha=0.2, color='steelblue')
+ax.plot(df_resultados['k'], df_resultados['accuracy'], 
+        marker='o', linewidth=3, markersize=12, color='steelblue', label='Accuracy')
+ax.fill_between(df_resultados['k'], df_resultados['accuracy'], 
+                 alpha=0.2, color='steelblue')
 
+# Anotaciones con accuracy y mejora
 for _, row in df_resultados.iterrows():
-    ax1.text(row['k'], row['accuracy'] + 1.5, f"{row['accuracy']:.1f}%", 
-             ha='center', fontsize=9, fontweight='bold')
+    if row['k'] == 1:
+        # K=1: solo mostrar accuracy
+        texto = f"{row['accuracy']:.1f}%"
+    else:
+        # K>1: mostrar accuracy y mejora
+        mejora = row['accuracy'] - accuracy_k1
+        texto = f"{row['accuracy']:.1f}%\n(+{mejora:.1f}%)"
+    
+    ax.text(row['k'], row['accuracy'] + 2, texto, 
+            ha='center', fontsize=9, fontweight='bold',
+            bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.8))
 
-ax1.axhline(y=accuracy_k1, color='red', linestyle='--', linewidth=1.5, 
-            alpha=0.6, label=f'Baseline (k=1): {accuracy_k1:.1f}%')
+ax.axhline(y=accuracy_k1, color='red', linestyle='--', linewidth=2, 
+           alpha=0.6, label=f'Baseline (K=1): {accuracy_k1:.1f}%')
 
-ax1.scatter([mejor_k['k']], [mejor_k['accuracy']], 
-            color='green', s=200, zorder=5, marker='*', 
-            label=f'Mejor k={int(mejor_k["k"])}')
+ax.scatter([mejor_k['k']], [mejor_k['accuracy']], 
+           color='gold', s=300, zorder=5, marker='*', edgecolors='green', linewidths=2,
+           label=f'Mejor K={int(mejor_k["k"])} (+{mejora_total:.1f}%)')
 
-ax1.set_xlabel('Valor de K', fontsize=11, fontweight='bold')
-ax1.set_ylabel('Accuracy (%)', fontsize=11, fontweight='bold')
-ax1.set_title('Accuracy vs K: Top-K Candidatos', fontweight='bold', fontsize=12)
-ax1.grid(True, alpha=0.3, linestyle='--')
-ax1.legend(fontsize=9)
-ax1.set_xticks(k_values)
+ax.set_xlabel('Valor de K (número de candidatos)', fontsize=12, fontweight='bold')
+ax.set_ylabel('Accuracy (%)', fontsize=12, fontweight='bold')
+ax.set_title(f'{dataset_nombre} | Optimización del Parámetro K | Test: {len(X_test)} muestras\n' +
+             f'Mejora máxima: +{mejora_total:.1f}% (K=1 → K={int(mejor_k["k"])})',
+             fontweight='bold', fontsize=13)
+ax.grid(True, alpha=0.3, linestyle='--')
+ax.legend(fontsize=11, loc='lower right')
+ax.set_xticks(k_values)
+ax.set_ylim(min(df_resultados['accuracy']) - 5, max(df_resultados['accuracy']) + 8)
 
-mejoras = []
-for k in k_values[1:]:
-    acc_k = df_resultados[df_resultados['k'] == k]['accuracy'].values[0]
-    mejora = acc_k - accuracy_k1
-    mejoras.append(mejora)
-
-ax2.bar(k_values[1:], mejoras, color='green', alpha=0.7, edgecolor='black')
-ax2.axhline(y=0, color='red', linestyle='-', linewidth=1)
-
-for k, mejora in zip(k_values[1:], mejoras):
-    ax2.text(k, mejora + 0.5, f'+{mejora:.1f}%', 
-             ha='center', fontsize=9, fontweight='bold')
-
-ax2.set_xlabel('Valor de K', fontsize=11, fontweight='bold')
-ax2.set_ylabel('Mejora vs k=1 (%)', fontsize=11, fontweight='bold')
-ax2.set_title('Mejora Relativa por K', fontweight='bold', fontsize=12)
-ax2.grid(True, alpha=0.3, axis='y')
-ax2.set_xticks(k_values[1:])
-
-plt.suptitle(f'{dataset_nombre} | Optimización K | Test: {len(X_test)} muestras', 
-             fontsize=14, fontweight='bold')
-plt.tight_layout(rect=[0, 0, 1, 0.96])
+plt.tight_layout()
 plt.savefig(f'../resultados/{dataset_id}/graficos/07_optimizacion_k.png', dpi=200, bbox_inches='tight')
 plt.close()
 
