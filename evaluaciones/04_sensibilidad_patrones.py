@@ -84,46 +84,38 @@ df_resultados = pd.DataFrame(resultados)
 mejor_idx = df_resultados['accuracy'].idxmax()
 mejor = df_resultados.iloc[mejor_idx]
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+# Crear figura con un solo gráfico más grande
+fig, ax = plt.subplots(figsize=(12, 6))
 
-ax1.plot(df_resultados['porcentaje'], df_resultados['accuracy'], 
-         marker='o', linewidth=2.5, markersize=10, color='darkblue', label='Accuracy')
-ax1.fill_between(df_resultados['porcentaje'], df_resultados['accuracy'], 
-                  alpha=0.2, color='darkblue')
+ax.plot(df_resultados['porcentaje'], df_resultados['accuracy'], 
+        marker='o', linewidth=3, markersize=12, color='darkblue', label='Accuracy')
+ax.fill_between(df_resultados['porcentaje'], df_resultados['accuracy'], 
+                 alpha=0.2, color='darkblue')
 
-ax1.scatter([mejor['porcentaje']], [mejor['accuracy']], 
-            s=200, color='gold', edgecolors='red', linewidths=2, zorder=5,
-            label=f'Mejor: {mejor["porcentaje"]:.0f}%')
+ax.scatter([mejor['porcentaje']], [mejor['accuracy']], 
+           s=250, color='gold', edgecolors='red', linewidths=3, zorder=5,
+           label=f'Mejor: {mejor["porcentaje"]:.0f}% ({mejor["accuracy"]:.2f}%)')
 
+# Anotaciones mejoradas con accuracy y número de prototipos
 for _, row in df_resultados.iterrows():
-    ax1.text(row['porcentaje'], row['accuracy'] + 0.8, 
-             f"{row['accuracy']:.2f}%", 
-             ha='center', fontsize=9, fontweight='bold')
+    ax.text(row['porcentaje'], row['accuracy'] + 1.2, 
+            f"{row['accuracy']:.2f}%\n({int(row['n_prototipos'])} prototipos)", 
+            ha='center', fontsize=10, fontweight='bold',
+            bbox=dict(boxstyle='round,pad=0.4', facecolor='white', alpha=0.8))
 
-ax1.set_xlabel('Porcentaje de Train (%)', fontsize=11, fontweight='bold')
-ax1.set_ylabel('Accuracy (%)', fontsize=11, fontweight='bold')
-ax1.set_title('Accuracy vs Tamaño de Train', fontweight='bold', fontsize=12)
-ax1.legend(fontsize=9)
-ax1.grid(True, alpha=0.3, linestyle='--')
-ax1.set_xticks(df_resultados['porcentaje'])
+mejora = df_resultados.iloc[-1]['accuracy'] - df_resultados.iloc[0]['accuracy']
 
-ax2.bar(df_resultados['porcentaje'], df_resultados['n_prototipos'], 
-        color='steelblue', alpha=0.7, edgecolor='black')
+ax.set_xlabel('Porcentaje de Train (%)', fontsize=12, fontweight='bold')
+ax.set_ylabel('Accuracy (%)', fontsize=12, fontweight='bold')
+ax.set_title(f'{dataset_nombre} | Sensibilidad a Cantidad de Patrones | Test: {len(X_test)} muestras\n' +
+             f'Mejora total: {"+" if mejora >= 0 else ""}{mejora:.2f}% (25% → 100%)', 
+             fontweight='bold', fontsize=13)
+ax.legend(fontsize=11, loc='lower right')
+ax.grid(True, alpha=0.3, linestyle='--')
+ax.set_xticks(df_resultados['porcentaje'])
+ax.set_ylim(min(df_resultados['accuracy']) - 5, max(df_resultados['accuracy']) + 5)
 
-for _, row in df_resultados.iterrows():
-    ax2.text(row['porcentaje'], row['n_prototipos'] + 5, 
-             f"{int(row['n_prototipos'])}", 
-             ha='center', fontsize=9, fontweight='bold')
-
-ax2.set_xlabel('Porcentaje de Train (%)', fontsize=11, fontweight='bold')
-ax2.set_ylabel('Número de Prototipos', fontsize=11, fontweight='bold')
-ax2.set_title('Prototipos Generados', fontweight='bold', fontsize=12)
-ax2.grid(True, alpha=0.3, axis='y')
-ax2.set_xticks(df_resultados['porcentaje'])
-
-plt.suptitle(f'{dataset_nombre} | Sensibilidad a Patrones | Test: {len(X_test)} muestras', 
-             fontsize=14, fontweight='bold')
-plt.tight_layout(rect=[0, 0, 1, 0.96])
+plt.tight_layout()
 plt.savefig(f'../resultados/{dataset_id}/graficos/09_sensibilidad_patrones.png', dpi=200, bbox_inches='tight')
 plt.close()
 

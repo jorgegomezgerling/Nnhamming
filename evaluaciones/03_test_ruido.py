@@ -104,47 +104,42 @@ accuracy_base = df_resultados.iloc[0]['accuracy']
 accuracy_30 = df_resultados.iloc[-1]['accuracy']
 degradacion_total = accuracy_base - accuracy_30
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+# Crear figura con un solo gráfico más grande
+fig, ax = plt.subplots(figsize=(12, 6))
 
-ax1.plot(df_resultados['nivel_ruido'], df_resultados['accuracy'], 
-         marker='o', linewidth=2.5, markersize=10, color='crimson', label='Accuracy')
-ax1.fill_between(df_resultados['nivel_ruido'], df_resultados['accuracy'], 
-                  alpha=0.2, color='crimson')
+ax.plot(df_resultados['nivel_ruido'], df_resultados['accuracy'], 
+        marker='o', linewidth=3, markersize=12, color='crimson', label='Accuracy')
+ax.fill_between(df_resultados['nivel_ruido'], df_resultados['accuracy'], 
+                 alpha=0.2, color='crimson')
 
-ax1.axhline(y=accuracy_base, color='green', linestyle='--', linewidth=1.5, 
-            alpha=0.6, label=f'Baseline (0% ruido): {accuracy_base:.1f}%')
+ax.axhline(y=accuracy_base, color='green', linestyle='--', linewidth=2, 
+           alpha=0.6, label=f'Baseline (0% ruido): {accuracy_base:.1f}%')
 
-for _, row in df_resultados.iterrows():
-    ax1.text(row['nivel_ruido'], row['accuracy'] + 1.2, f"{row['accuracy']:.1f}%", 
-             ha='center', fontsize=9, fontweight='bold')
+# Anotaciones con accuracy y pérdida
+for i, row in df_resultados.iterrows():
+    if i == 0:
+        # Primer punto: solo accuracy
+        ax.text(row['nivel_ruido'], row['accuracy'] + 1.5, 
+                f"{row['accuracy']:.1f}%", 
+                ha='center', fontsize=10, fontweight='bold')
+    else:
+        # Resto: accuracy y pérdida
+        perdida = accuracy_base - row['accuracy']
+        ax.text(row['nivel_ruido'], row['accuracy'] + 1.5, 
+                f"{row['accuracy']:.1f}%\n(-{perdida:.1f}%)", 
+                ha='center', fontsize=10, fontweight='bold',
+                bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.7))
 
-ax1.set_xlabel('Nivel de Ruido (%)', fontsize=11, fontweight='bold')
-ax1.set_ylabel('Accuracy (%)', fontsize=11, fontweight='bold')
-ax1.set_title('Degradación del Accuracy con Ruido', fontweight='bold', fontsize=12)
-ax1.legend(fontsize=9)
-ax1.grid(True, alpha=0.3, linestyle='--')
-ax1.set_ylim(0, max(df_resultados['accuracy']) + 5)
+ax.set_xlabel('Nivel de Ruido (%)', fontsize=12, fontweight='bold')
+ax.set_ylabel('Accuracy (%)', fontsize=12, fontweight='bold')
+ax.set_title(f'{dataset_nombre} | Test de Ruido | {n_features} bits | Test: {len(X_test)} muestras\n' +
+             f'Degradación total: {degradacion_total:.1f}% (0% → 30%)', 
+             fontweight='bold', fontsize=13)
+ax.legend(fontsize=11, loc='upper right')
+ax.grid(True, alpha=0.3, linestyle='--')
+ax.set_ylim(0, max(df_resultados['accuracy']) + 6)
 
-degradaciones = []
-for i in range(1, len(df_resultados)):
-    deg = df_resultados.iloc[0]['accuracy'] - df_resultados.iloc[i]['accuracy']
-    degradaciones.append(deg)
-
-ax2.bar(df_resultados['nivel_ruido'][1:], degradaciones, 
-        color='crimson', alpha=0.7, edgecolor='black')
-
-for nivel, deg in zip(df_resultados['nivel_ruido'][1:], degradaciones):
-    ax2.text(nivel, deg + 0.3, f'-{deg:.1f}%', 
-             ha='center', fontsize=9, fontweight='bold')
-
-ax2.set_xlabel('Nivel de Ruido (%)', fontsize=11, fontweight='bold')
-ax2.set_ylabel('Pérdida de Accuracy (%)', fontsize=11, fontweight='bold')
-ax2.set_title('Pérdida Acumulada vs Baseline', fontweight='bold', fontsize=12)
-ax2.grid(True, alpha=0.3, axis='y')
-
-plt.suptitle(f'{dataset_nombre} | Test de Ruido | {n_features} bits | Test: {len(X_test)} muestras', 
-             fontsize=14, fontweight='bold')
-plt.tight_layout(rect=[0, 0, 1, 0.96])
+plt.tight_layout()
 plt.savefig(f'../resultados/{dataset_id}/graficos/08_test_ruido.png', dpi=200, bbox_inches='tight')
 plt.close()
 

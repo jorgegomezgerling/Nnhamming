@@ -6,20 +6,25 @@ CONFIGURACIÓN
   Train:             2051
   Test:              513
   Prototipos:        2051
-  Epsilon factors:   [0.1, 0.5, 1.0, 2.0, 5.0, 10.0]
+  Epsilon factors:   [0.1, 1.0, 2.0, 5.0, 10.0]
   Fórmula:           ε = factor / (M + 1), M = prototipos
 
 RESULTADOS
    ε factor      ε real    Accuracy   Iter. prom.
   ---------  ----------  ----------  ------------
         0.1    0.000049      24.37%          20.0 *
-        0.5    0.000244      24.37%          20.0  
         1.0    0.000487      24.37%          20.0  
         2.0    0.000975       1.36%          19.9  
         5.0    0.002437       0.58%          20.0  
        10.0    0.004873       0.58%          20.0  
 
   * Mejor accuracy
+
+ANÁLISIS DE CONVERGENCIA
+  Iteraciones mínimas:    19.9
+  Iteraciones máximas:    20.0
+  Variación:              0.1
+  Conclusión:             Epsilon NO afecta significativamente la convergencia
 
 RESUMEN
   Mejor ε factor:         0.1

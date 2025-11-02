@@ -40,7 +40,7 @@ train_df[config['target']] = Y_train.values
 red = Nnhamming()
 red.fit_from_df(train_df)
 
-epsilon_factors = [0.1, 0.5, 1.0, 2.0, 5.0, 10.0]
+epsilon_factors = [0.1, 1.0, 2.0, 5.0, 10.0]
 resultados = []
 
 for idx, epsilon_factor in enumerate(epsilon_factors):
@@ -77,47 +77,55 @@ df_resultados = pd.DataFrame(resultados)
 mejor_idx = df_resultados['accuracy'].idxmax()
 mejor = df_resultados.iloc[mejor_idx]
 
-fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
+# Calcular rango de variación de iteraciones
+iter_min = df_resultados['promedio_iteraciones'].min()
+iter_max = df_resultados['promedio_iteraciones'].max()
+iter_variacion = iter_max - iter_min
 
-ax1.plot(df_resultados['epsilon_factor'], df_resultados['accuracy'], 
-         marker='o', linewidth=2.5, markersize=10, color='darkgreen', label='Accuracy')
-ax1.fill_between(df_resultados['epsilon_factor'], df_resultados['accuracy'], 
-                  alpha=0.2, color='darkgreen')
+# Crear figura con un solo gráfico más grande
+fig, ax = plt.subplots(figsize=(12, 6))
 
-ax1.scatter([mejor['epsilon_factor']], [mejor['accuracy']], 
-            s=200, color='gold', edgecolors='red', linewidths=2, zorder=5,
-            label=f'Mejor: ε={mejor["epsilon_factor"]:.1f}')
+ax.plot(df_resultados['epsilon_factor'], df_resultados['accuracy'], 
+        marker='o', linewidth=3, markersize=12, color='darkgreen', label='Accuracy')
+ax.fill_between(df_resultados['epsilon_factor'], df_resultados['accuracy'], 
+                 alpha=0.2, color='darkgreen')
 
-for _, row in df_resultados.iterrows():
-    ax1.text(row['epsilon_factor'], row['accuracy'] + 0.8, 
-             f"{row['accuracy']:.2f}%", 
-             ha='center', fontsize=9, fontweight='bold')
+ax.scatter([mejor['epsilon_factor']], [mejor['accuracy']], 
+           s=250, color='gold', edgecolors='red', linewidths=3, zorder=5,
+           label=f'Mejor: ε={mejor["epsilon_factor"]:.1f} ({mejor["accuracy"]:.2f}%)')
 
-ax1.set_xlabel('Factor de Epsilon', fontsize=11, fontweight='bold')
-ax1.set_ylabel('Accuracy (%)', fontsize=11, fontweight='bold')
-ax1.set_title('Accuracy vs Factor de Inhibición', fontweight='bold', fontsize=12)
-ax1.legend(fontsize=9)
-ax1.grid(True, alpha=0.3, linestyle='--')
+# Anotaciones con offsets verticales para evitar solapamiento
+offsets = [3.5, 3.5, 2.5, 2, 2]  # Offsets verticales personalizados
+for idx, (_, row) in enumerate(df_resultados.iterrows()):
+    offset = offsets[idx]
+    
+    # Solo mostrar iteraciones si hay variación significativa (>1)
+    if iter_variacion > 1.0:
+        texto = f"{row['accuracy']:.2f}%\n({row['promedio_iteraciones']:.1f} iter.)"
+    else:
+        # Si las iteraciones son casi constantes, solo mostrar accuracy
+        texto = f"{row['accuracy']:.2f}%"
+    
+    ax.text(row['epsilon_factor'], row['accuracy'] + offset, 
+            texto, 
+            ha='center', fontsize=9, fontweight='bold',
+            bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.85, edgecolor='gray', linewidth=0.5))
 
-ax2.plot(df_resultados['epsilon_factor'], df_resultados['promedio_iteraciones'], 
-         marker='s', linewidth=2.5, markersize=10, color='crimson', label='Iteraciones')
-ax2.fill_between(df_resultados['epsilon_factor'], df_resultados['promedio_iteraciones'], 
-                  alpha=0.2, color='crimson')
+# Subtítulo con info de convergencia
+if iter_variacion > 1.0:
+    convergencia_info = f'Convergencia: {iter_min:.1f}-{iter_max:.1f} iteraciones (variación: {iter_variacion:.1f})'
+else:
+    convergencia_info = f'Convergencia estable: ~{iter_min:.1f} iteraciones'
 
-for _, row in df_resultados.iterrows():
-    ax2.text(row['epsilon_factor'], row['promedio_iteraciones'] + 0.3, 
-             f"{row['promedio_iteraciones']:.1f}", 
-             ha='center', fontsize=9, fontweight='bold')
+ax.set_xlabel('Factor de Epsilon', fontsize=12, fontweight='bold')
+ax.set_ylabel('Accuracy (%)', fontsize=12, fontweight='bold')
+ax.set_title(f'{dataset_nombre} | Sensibilidad del Parámetro Epsilon | Test: {len(X_test)} muestras\n{convergencia_info}', 
+             fontweight='bold', fontsize=13)
+ax.legend(fontsize=11, loc='upper right')
+ax.grid(True, alpha=0.3, linestyle='--')
+ax.set_ylim(0, max(df_resultados['accuracy']) + 10)
 
-ax2.set_xlabel('Factor de Epsilon', fontsize=11, fontweight='bold')
-ax2.set_ylabel('Iteraciones Promedio', fontsize=11, fontweight='bold')
-ax2.set_title('Convergencia vs Factor de Inhibición', fontweight='bold', fontsize=12)
-ax2.legend(fontsize=9)
-ax2.grid(True, alpha=0.3, linestyle='--')
-
-plt.suptitle(f'{dataset_nombre} | Sensibilidad Epsilon | Test: {len(X_test)} muestras', 
-             fontsize=14, fontweight='bold')
-plt.tight_layout(rect=[0, 0, 1, 0.96])
+plt.tight_layout()
 plt.savefig(f'../resultados/{dataset_id}/graficos/10_sensibilidad_epsilon.png', dpi=200, bbox_inches='tight')
 plt.close()
 
@@ -147,6 +155,15 @@ with open(f'../resultados/{dataset_id}/metricas/10_sensibilidad_epsilon.txt', 'w
         f.write(f"  {eps_factor:9.1f}  {eps_real:10.6f}  {accuracy:9.2f}%  {iter_prom:12.1f}{marca}\n")
     
     f.write(f"\n  * Mejor accuracy\n\n")
+    
+    f.write("ANÁLISIS DE CONVERGENCIA\n")
+    f.write(f"  Iteraciones mínimas:    {iter_min:.1f}\n")
+    f.write(f"  Iteraciones máximas:    {iter_max:.1f}\n")
+    f.write(f"  Variación:              {iter_variacion:.1f}\n")
+    if iter_variacion < 1.0:
+        f.write(f"  Conclusión:             Epsilon NO afecta significativamente la convergencia\n\n")
+    else:
+        f.write(f"  Conclusión:             Epsilon afecta la velocidad de convergencia\n\n")
     
     f.write("RESUMEN\n")
     f.write(f"  Mejor ε factor:         {mejor['epsilon_factor']:.1f}\n")

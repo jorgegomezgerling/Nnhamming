@@ -45,6 +45,6 @@ EJEMPLO: LÍMITES PARA Comp_2
 
 RESULTADO:
 
-Transformación exitosa: valores continuos: 3 categorías discretas
+Transformación exitosa: valores continuos → 3 categorías discretas
 Balance uniforme logrado con strategy='quantile'
 
