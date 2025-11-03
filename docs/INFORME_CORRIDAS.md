@@ -1,6 +1,6 @@
 # Informe de Evaluación - Red de Hamming
 
-## Resumen Ejecutivo
+## Resumen
 
 Mediante este informe presentamos los resultados de la evaluación de una Red de Hamming aplicada al diagnóstico de enfermedades en dos datasets de diferente complejidad: Kaggle (133 clases) y Mendeley (24 clases).
 Realizamos las pruebas exhaustivas solicitadas y correspondientes, las cuales incluyen matriz de confusión, optimización del parámetro K, test de ruido, sensibilidad a cantidad de patrones y sensibilidad al parámetro epsilon.
@@ -675,5 +675,4 @@ resultados/
 
 ---
 
-**Fecha de elaboración:** Noviembre 2025  
-**Versión:** 1.0
+**Fecha de elaboración:** Noviembre 2025
