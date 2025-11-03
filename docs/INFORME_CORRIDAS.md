@@ -38,7 +38,11 @@ Todas las evaluaciones se realizaron bajo las siguientes condiciones:
 - Muestras totales: 2,564
 - Features originales: 400 síntomas binarios
 - Clases: 133 enfermedades únicas
-- Balance: Todas las clases con 15-29 casos
+- Balance: **Desbalanceado** (rango: 3-43 casos por clase, promedio: 19.3)
+  - 8 clases con <10 casos (ruido muestral)
+  - 31 clases con <15 casos
+  - Clase más rara: 'decubitus ulcer' (3 casos)
+  - Clase más frecuente: 43 casos
 
 **Pipeline de preprocesamiento:**
 
@@ -100,15 +104,15 @@ Todas las evaluaciones se realizaron bajo las siguientes condiciones:
 
 ### 2.3 Comparación de Datasets
 
-| Característica        | Kaggle | Mendeley | Diferencia |
-| --------------------- | ------ | -------- | ---------- |
-| Muestras              | 2,564  | 358      | -86%       |
-| Clases                | 133    | 24       | -82%       |
-| Features finales      | 20     | 20       | 0%         |
-| Ratio clases/features | 6.65   | 1.20     | -82%       |
-| Varianza PCA retenida | 70.44% | 96.10%   | +25.7%     |
-| Mín. casos/clase      | 15     | 10       | -33%       |
-| Máx. casos/clase      | 29     | 41       | +41%       |
+| Característica        | Kaggle | Mendeley |
+| --------------------- | ------ | -------- |
+| Muestras              | 2,564  | 358      |
+| Clases                | 133    | 24       |
+| Features finales      | 20     | 20       |
+| Ratio clases/features | 6.65   | 1.20     |
+| Varianza PCA retenida | 70.44% | 96.10%   |
+| Mín. casos/clase      | 3      | 10       |
+| Máx. casos/clase      | 29     | 41       |
 
 **Observación clave:** Mendeley tiene un ratio clases/features 5.5 veces menor que Kaggle, lo que sugiere mejor separabilidad.
 
@@ -126,11 +130,9 @@ Todas las evaluaciones se realizaron bajo las siguientes condiciones:
 
 **Distribución de casos:**
 
-- Mínimo: 15 casos
-- Máximo: 29 casos
+- Mínimo: 3 casos
+- Máximo: 43 casos
 - Promedio: 19.3 casos
-- Mediana: 19 casos
-- Clases con menos de 10 casos: 0
 
 ---
 
@@ -179,8 +181,8 @@ Todas las evaluaciones se realizaron bajo las siguientes condiciones:
 133. Fungal infection                    :    0.0% (0/4)
 ```
 
-**Interpretación:**
-El alto número de clases con 0% accuracy (43.6%) indica que con solo 20 bits es imposible distinguir de forma única 133 enfermedades. Muchas comparten patrones similares.
+**Interpretación posible:**
+El alto número de clases con 0% accuracy (43.6%) indica que con solo 20 bits es muy difícil disntiguir de forma única 133 enfermedades. Muchas comparten patrones similares.
 
 ---
 
@@ -201,6 +203,7 @@ El alto número de clases con 0% accuracy (43.6%) indica que con solo 20 bits es
 **Mejor K:** 10
 
 **Interpretación:**
+
 La mejora de +44.83% al usar K=10 demuestra que aunque la red no puede dar el diagnóstico exacto como primera opción, el diagnóstico correcto sí está dentro de los 10 candidatos más cercanos en el 69.2% de los casos.
 
 ---
@@ -227,7 +230,8 @@ La mejora de +44.83% al usar K=10 demuestra que aunque la red no puede dar el di
 **Degradación total (0% → 30%):** -10.14%
 
 **Interpretación:**
-La red muestra degradación gradual y controlada ante ruido. Con 30% de bits invertidos (6 de 20), el accuracy solo baja 10 puntos porcentuales, lo que indica robustez razonable.
+
+La red muestra degradación gradual y controlada ante ruido. Con 30% de bits invertidos (6 de 20), el accuracy solo baja 10 puntos porcentuales.
 
 ---
 
@@ -251,6 +255,7 @@ La red muestra degradación gradual y controlada ante ruido. Con 30% de bits inv
 **Diferencia (25% → 100%):** +0.59%
 
 **Interpretación:**
+
 La cantidad de datos tiene impacto mínimo en el accuracy (solo +0.59%). Esto indica que el problema está limitado por la separabilidad de las clases (ratio alto), no por falta de datos de entrenamiento.
 
 ---
@@ -277,6 +282,7 @@ La cantidad de datos tiene impacto mínimo en el accuracy (solo +0.59%). Esto in
 **Mejor ε factor:** 1.0
 
 **Interpretación:**
+
 Existe un punto de quiebre crítico entre ε=1.0 y ε=2.0. Con valores mayores a 1.0, la inhibición es excesiva y la red colapsa (accuracy menor a 2%). El valor por defecto (1.0) es óptimo.
 
 ---
@@ -343,6 +349,7 @@ Existe un punto de quiebre crítico entre ε=1.0 y ε=2.0. Con valores mayores a
 ```
 
 **Interpretación:**
+
 Ninguna enfermedad tiene 0% accuracy. Todas las clases son clasificables con al menos 66.7% de precisión, demostrando buena separabilidad con ratio 1.20.
 
 ---
@@ -364,7 +371,8 @@ Ninguna enfermedad tiene 0% accuracy. Todas las clases son clasificables con al 
 **Mejor K:** 10
 
 **Interpretación:**
-Aunque el accuracy con K=1 ya es excelente (91.67%), usar K=10 permite alcanzar 98.61%, clasificando correctamente 71 de 72 casos de prueba.
+
+Aunque el accuracy con K=1 ya es excelente (91.67%), usar K=10 permite alcanzar 98.61%.
 
 ---
 
@@ -390,7 +398,7 @@ Aunque el accuracy con K=1 ya es excelente (91.67%), usar K=10 permite alcanzar 
 **Degradación total (0% → 30%):** -15.28%
 
 **Interpretación:**
-Incluso con 30% de ruido (6 bits invertidos), el accuracy se mantiene en 76.39%, demostrando alta robustez. La degradación es más pronunciada que en Kaggle debido al accuracy inicial más alto.
+Incluso con 30% de ruido (6 bits invertidos), el accuracy se mantiene en 76.39%, demostrando alta robustez.
 
 ---
 
@@ -440,6 +448,7 @@ Con solo 25% del train (71 muestras) ya se alcanza 88.89% accuracy. La mejora es
 **Mejor ε factor:** 1.0
 
 **Interpretación:**
+
 Similar a Kaggle, existe un punto de quiebre entre ε=1.0 y ε=2.0. El comportamiento es consistente entre ambos datasets.
 
 ---
@@ -464,35 +473,8 @@ Similar a Kaggle, existe un punto de quiebre entre ε=1.0 y ε=2.0. El comportam
 
 **Hallazgo principal:** El ratio clases/features es el factor determinante del accuracy.
 
-```
-Kaggle:   Ratio 6.65 → 24.37% accuracy (K=1)
+Kaggle: Ratio 6.65 → 24.37% accuracy (K=1)
 Mendeley: Ratio 1.20 → 91.67% accuracy (K=1)
-
-Diferencia de ratio: 5.5x
-Diferencia de accuracy: 3.8x
-```
-
-**Visualización:**
-
-```
-Accuracy vs Ratio
-
-100% |                    * Mendeley (1.20, 91.67%)
-     |
- 80% |
-     |
- 60% |
-     |
- 40% |
-     |
- 20% |                                * Kaggle (6.65, 24.37%)
-     |
-  0% +----+----+----+----+----+----+----+
-     0    1    2    3    4    5    6    7
-                Ratio clases/features
-```
-
-**Conclusión:** Un ratio menor a 2.0 permite accuracy mayor a 80%, mientras que ratios mayores a 5.0 resultan en accuracy menor a 30%.
 
 ---
 
@@ -512,12 +494,6 @@ Accuracy vs Ratio
 - El diagnóstico correcto suele ser la primera opción
 - K=3 ya alcanza 95.83% accuracy
 
-**Recomendación:**
-
-- Ratio menor a 2.0: K=1 o K=2 es suficiente
-- Ratio 2.0-5.0: Usar K=3 a K=5
-- Ratio mayor a 5.0: Usar K=7 a K=10
-
 ---
 
 ### 5.4 Robustez al Ruido
@@ -533,9 +509,6 @@ Accuracy vs Ratio
 
 - Kaggle: 41.6% del accuracy original
 - Mendeley: 16.7% del accuracy original
-
-**Interpretación:**
-Mendeley muestra mayor pérdida absoluta (-15.28% vs -10.14%) pero menor pérdida relativa (16.7% vs 41.6%). Ambos mantienen utilidad práctica hasta 20% de ruido.
 
 ---
 
@@ -553,23 +526,20 @@ Mendeley muestra mayor pérdida absoluta (-15.28% vs -10.14%) pero menor pérdid
 - Kaggle: Más datos no ayudan (problema de separabilidad)
 - Mendeley: Más datos sí ayudan (problema de generalización)
 
-**Conclusión:** Con ratios altos, el problema no es falta de datos sino exceso de clases para los bits disponibles.
-
 ---
 
-## 6. Conclusiones
+## 6. Conclusiones Iniciales
 
-### 6.1 Hallazgos Principales
+### 6.1 Consideraciones:
 
 1. **El ratio clases/features determina el accuracy:**
 
-   - Ratio menor a 2.0: Accuracy mayor a 80% (excelente)
-   - Ratio mayor a 5.0: Accuracy menor a 30% (limitado)
+   - Ratio menor a 2.0: Accuracy mayor a 80%
+   - Ratio mayor a 5.0: Accuracy menor a 30%
 
 2. **La Red de Hamming es efectiva para datasets pequeños:**
 
    - Mendeley con solo 358 muestras logra 91.67% accuracy
-   - No requiere miles de datos como Deep Learning
 
 3. **El parámetro K amplía la utilidad clínica:**
 
@@ -591,7 +561,7 @@ Mendeley muestra mayor pérdida absoluta (-15.28% vs -10.14%) pero menor pérdid
 
 1. **Interpretabilidad:** La distancia de Hamming es intuitiva y explicable
 2. **Velocidad:** Predicción en tiempo real (O(n) por consulta)
-3. **Simplicidad:** No requiere ajuste complejo de hiperparámetros
+3. **Simplicidad:** No requiere ajuste complejo.
 4. **Efectividad en ratios bajos:** Accuracy comparable a métodos modernos
 5. **Pocos datos requeridos:** Funciona con cientos de muestras
 
@@ -599,7 +569,7 @@ Mendeley muestra mayor pérdida absoluta (-15.28% vs -10.14%) pero menor pérdid
 
 ### 6.3 Limitaciones Identificadas
 
-1. **Dependencia del ratio:** Accuracy colapsa con ratios mayores a 5.0
+1. **Dependencia del ratio:** Accuracy muestra gran diferencia dependiendo el ratio clases/features.
 2. **Requiere preprocesamiento:** Pipeline PCA + Discretización + Binarización obligatorio
 3. **Pérdida de información:** La binarización elimina granularidad
 4. **Sensibilidad al desbalanceo:** Clases con menos de 10 casos tienen 0% accuracy
@@ -621,36 +591,6 @@ Mendeley muestra mayor pérdida absoluta (-15.28% vs -10.14%) pero menor pérdid
 
 - Ratio clases/features mayor a 5.0
 - Se dispone de miles de muestras
-- Accuracy menor a 30% no es aceptable
-- Hay métodos más apropiados disponibles (Random Forest, XGBoost, Neural Networks)
-
----
-
-### 6.5 Trabajos Futuros
-
-1. **Explorar discretización adaptativa:**
-
-   - Usar más de 3 bins para features importantes
-   - Binarización diferenciada por feature
-
-2. **Técnicas de balanceo:**
-
-   - SMOTE para clases minoritarias
-   - Ponderación de prototipos por frecuencia
-
-3. **Ensamble de redes:**
-
-   - Múltiples redes con diferentes subconjuntos de features
-   - Votación o promedio de predicciones
-
-4. **Optimización de epsilon:**
-
-   - Ajuste dinámico según el problema
-   - Valores diferentes por clase
-
-5. **Hibridación con otros métodos:**
-   - Red de Hamming para pre-filtrado rápido
-   - Método más complejo para refinamiento
 
 ---
 
@@ -658,8 +598,6 @@ Mendeley muestra mayor pérdida absoluta (-15.28% vs -10.14%) pero menor pérdid
 
 - Dataset Kaggle: Disease Prediction from Symptoms (Kaggle Competition)
 - Dataset Mendeley: Medical Diagnosis Dataset (Mendeley Data Repository)
-- Lippmann, R. P. (1987). "An introduction to computing with neural nets"
-- Hecht-Nielsen, R. (1990). "Neurocomputing"
 
 ---
 
@@ -667,20 +605,27 @@ Mendeley muestra mayor pérdida absoluta (-15.28% vs -10.14%) pero menor pérdid
 
 ### Anexo A: Configuración de Experimentos
 
-**Hardware:**
-
-- Procesador: [Especificar]
-- RAM: [Especificar]
-- Sistema operativo: [Especificar]
-
 **Software:**
 
-- Python: 3.8+
-- NumPy: 1.21.0
-- Pandas: 1.3.0
-- Scikit-learn: 1.0.0
-- Matplotlib: 3.4.0
-- Seaborn: 0.11.0
+contourpy==1.3.3
+cycler==0.12.1
+fonttools==4.60.1
+joblib==1.5.2
+kiwisolver==1.4.9
+kneed==0.8.5
+matplotlib==3.10.6
+numpy==2.3.2
+packaging==25.0
+pandas==2.3.2
+pillow==11.3.0
+pyparsing==3.2.5
+python-dateutil==2.9.0.post0
+pytz==2025.2
+scikit-learn==1.7.2
+scipy==1.16.2
+six==1.17.0
+threadpoolctl==3.6.0
+tzdata==2025.2
 
 **Reproducibilidad:**
 Todos los experimentos utilizaron random_state=42 para garantizar reproducibilidad.
@@ -696,13 +641,22 @@ resultados/
 ├── kaggle_enfermedades/
 │   ├── graficos/
 │   │   ├── 00_analisis_dataset_gold.png
+│   │   ├── 01_analisis_pca_varianza_barras.png
+│   │   ├── 02_mutual_information_analisis.png
+│   │   ├── 03_discretizacion_analisis.png
+│   │   ├── 04_binarizacion_analisis.png
 │   │   ├── 05_matriz_confusion_top20.png
-│   │   ├── 06_accuracy_por_enfermedad.png
+│   │   ├── 06_distribucion_accuracy.png
 │   │   ├── 07_optimizacion_k.png
 │   │   ├── 08_test_ruido.png
 │   │   ├── 09_sensibilidad_patrones.png
 │   │   └── 10_sensibilidad_epsilon.png
-│   └── metricas/
+│   ├── informes/
+│   │   ├── 01_informe_para_pca.txt
+│   │   ├── 02_informe_mutual_information.txt
+│   │   ├── 03_informe_discretizacion.txt
+│   │   └── 04_informe_binarizacion.txt
+└── └── metricas/
 │       ├── 00_caracterizacion_problema.txt
 │       ├── 01_matriz_confusion_completa.csv
 │       ├── 02_metricas_confusion.txt
@@ -721,5 +675,5 @@ resultados/
 
 ---
 
-**Fecha de elaboración:** Octubre 2025  
+**Fecha de elaboración:** Noviembre 2025  
 **Versión:** 1.0

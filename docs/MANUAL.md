@@ -50,7 +50,7 @@ Datos originales → PCA → Mutual Information → Discretización → Binariza
 
 **2. Dependencia del ratio clases/features**
 
-Las conclusiones que extrajimos acerca del comportamiento de nuestra red y su relación con el ratio clases/features son las siguientes:
+Las conclusiones parciales que son posibles de extraer de nuestra red y su relación con el ratio clases/features son las siguientes:
 
 | Ratio clases/features | Accuracy esperado | Recomendación                  |
 | --------------------- | ----------------- | ------------------------------ |
@@ -189,44 +189,48 @@ DATASET_ACTIVO = "mendeley_enfermedades"
 
 ### Test Demo 1: Predicción simple
 
-Crear un archivo `test_demo_simple.py` en la raíz del proyecto:
+El proyecto incluye un script de demostración (`demo.py`) que muestra el uso básico de la Red de Hamming con el dataset Mendeley limpio.
 
-```python
-import sys
-sys.path.append("src")
+### Ejecutar el Demo
 
-from Nnhamming import Nnhamming
-import pandas as pd
+Desde la raíz del proyecto:
 
-print("TEST DEMO: PREDICCIÓN SIMPLE")
+```bash
+python3 demo.py
+```
 
 # Cargar dataset
+
 df = pd.read_csv('datasets/mendeley_enfermedades/gold/mendeley_dataset.csv')
 
 # Entrenar red
+
 red = Nnhamming()
 red.fit_from_df(df)
 
 # Preparar patrón de prueba
+
 patron = df.drop('prognosis', axis=1).iloc[0].values.tolist()
 enfermedad_real = df['prognosis'].iloc[0]
 
 # Predecir
+
 predicciones = red.predict(patron, k=3)
 
 print("RESULTADOS")
 
 print("Top 3 predicciones:")
 for i, (enfermedad, confianza) in enumerate(predicciones, 1):
-    marca = "[CORRECTO]" if enfermedad == enfermedad_real else "[INCORRECTO]"
-    print(f"{i}. {marca} {enfermedad:30s} (confianza: {confianza:.2f})")
-```
+marca = "[CORRECTO]" if enfermedad == enfermedad_real else "[INCORRECTO]"
+print(f"{i}. {marca} {enfermedad:30s} (confianza: {confianza:.2f})")
+
+````
 
 Ejecutar:
 
 ```bash
 python3 test_demo_simple.py
-```
+````
 
 Salida esperada:
 
@@ -417,4 +421,4 @@ Esto aumenta la utilidad del sistema.
 
 ---
 
-**Última actualización:** Octubre 2025
+**Última actualización:** Noviembre 2025
